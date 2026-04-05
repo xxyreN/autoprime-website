@@ -552,6 +552,12 @@
     }
 
     .color-swatch[data-color="black"]  { background: #1a1a1a; }
+    .color-swatch[data-color="blue"]   { background: #2a4d7f; }
+    .color-swatch[data-color="red"]    { background: #8b1a1a; }
+    .color-swatch[data-color="white"]  { background: #e8e8e8; }
+    .color-swatch[data-color="silver"] { background: #a8a8a8; }
+    .color-swatch[data-color="green"]  { background: #2d5a3d; }
+    .color-swatch[data-color="gold"]   { background: #b8962e; }
 
     .toggle-row {
       display: flex;
@@ -967,6 +973,12 @@
           <div class="color-swatches">
             <div class="color-swatch active" data-color="original" title="Original (Gray)" onclick="setColor(this, 'original')" style="background:#8a8a8a;"></div>
             <div class="color-swatch" data-color="black" title="Midnight Black" onclick="setColor(this, 'black')"></div>
+            <div class="color-swatch" data-color="blue" title="Patriot Blue" onclick="setColor(this, 'blue')"></div>
+            <div class="color-swatch" data-color="red" title="Flame Red" onclick="setColor(this, 'red')"></div>
+            <div class="color-swatch" data-color="white" title="Bright White" onclick="setColor(this, 'white')"></div>
+            <div class="color-swatch" data-color="silver" title="Billet Silver" onclick="setColor(this, 'silver')"></div>
+            <div class="color-swatch" data-color="green" title="Olive Green" onclick="setColor(this, 'green')"></div>
+            <div class="color-swatch" data-color="gold" title="Canyon Gold" onclick="setColor(this, 'gold')"></div>
           </div>
         </div>
         <button class="reset-btn" onclick="resetCustomizer()">Reset All</button>
@@ -1169,8 +1181,21 @@
     revealElements.forEach(el => revealObserver.observe(el));
 
     // ── Vehicle Customizer ──
-    const colorImages = { original: 'images/ram-1500.jpg', black: 'images/black-ram-1500.jpg' };
-    const colorLabels = { original: 'Original (Gray)', black: 'Midnight Black' };
+    const colorImages = {
+      original: 'images/ram-1500.jpg',
+      black: 'images/colors/ram-1500-black.png',
+      blue: 'images/colors/ram-1500-blue.png',
+      red: 'images/colors/ram-1500-red.png',
+      white: 'images/colors/ram-1500-white.png',
+      silver: 'images/colors/ram-1500-silver.png',
+      green: 'images/colors/ram-1500-green.png',
+      gold: 'images/colors/ram-1500-gold.png'
+    };
+    const colorLabels = {
+      original: 'Original (Gray)', black: 'Midnight Black', blue: 'Patriot Blue',
+      red: 'Flame Red', white: 'Bright White', silver: 'Billet Silver',
+      green: 'Olive Green', gold: 'Canyon Gold'
+    };
     const activeColorName = document.getElementById('activeColorName');
     const previewImg = document.getElementById('customizerImg');
     function setColor(swatch, color) {
@@ -1183,9 +1208,17 @@
       if (activeColorName) activeColorName.textContent = colorLabels[color];
       var hp = document.getElementById('heroPrice');
       var hf = document.getElementById('heroFinance');
-      if (color === 'black') {
-        hp.innerHTML = '$52,085 <span style="font-size:0.7em;color:var(--text-muted);font-weight:400">(+$85 Black Edition)</span>';
-        hf.innerHTML = 'Finance from <strong>$720/mo</strong> with approved credit';
+      if (color !== 'original') {
+        var extras = { black: 85, blue: 120, red: 150, white: 0, silver: 50, green: 180, gold: 200 };
+        var extra = extras[color] || 0;
+        var total = 52000 + extra;
+        var monthly = Math.round(total / 72);
+        if (extra > 0) {
+          hp.innerHTML = '$' + total.toLocaleString() + ' <span style="font-size:0.7em;color:var(--text-muted);font-weight:400">(+$' + extra + ' ' + colorLabels[color] + ')</span>';
+        } else {
+          hp.textContent = '$' + total.toLocaleString();
+        }
+        hf.innerHTML = 'Finance from <strong>$' + monthly + '/mo</strong> with approved credit';
       } else {
         hp.textContent = '$52,000';
         hf.innerHTML = 'Finance from <strong>$719/mo</strong> with approved credit';
