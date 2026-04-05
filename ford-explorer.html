@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2024 Ford Explorer XLT — AutoPrime</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ── CSS Variables ───────────────────────────────── */
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #111111;
+      --bg-elevated: #161616;
+      --gold: #c9a96e;
+      --gold-light: #e2c992;
+      --gold-dark: #a8883d;
+      --text: #f0ece2;
+      --text-dim: #8a8475;
+      --text-muted: #5a5549;
+      --border: rgba(201,169,110,0.12);
+      --radius: 10px;
+      --transition: 0.35s cubic-bezier(.25,.8,.25,1);
+    }
+
+    /* ── Reset & Base ────────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    h1, h2, h3, h4 { font-family: 'Playfair Display', serif; font-weight: 700; }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* ── Reveal Animations ───────────────────────────── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(36px);
+      transition: opacity 0.8s var(--transition), transform 0.8s var(--transition);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Glassmorphism Nav ────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 60px;
+      height: 72px;
+      background: rgba(10,10,10,0.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+    .logo span { color: var(--gold); }
+    .nav-links { list-style: none; display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      color: var(--text-dim);
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: color var(--transition);
+      letter-spacing: 0.3px;
+    }
+    .nav-links a:hover { color: var(--gold-light); }
+    .nav-cta {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg) !important;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 700 !important;
+      font-size: 0.85rem !important;
+      letter-spacing: 0.5px;
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px rgba(201,169,110,0.25);
+    }
+
+    /* ── Hamburger ────────────────────────────────────── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 1100;
+      background: none;
+      border: none;
+      padding: 6px;
+    }
+    .hamburger span {
+      display: block;
+      width: 26px;
+      height: 2px;
+      background: var(--gold);
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* ── Mobile Menu (slide from right) ──────────────── */
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 300px;
+      height: 100vh;
+      background: rgba(17,17,17,0.97);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      z-index: 1050;
+      flex-direction: column;
+      padding: 100px 40px 40px;
+      gap: 8px;
+      transform: translateX(100%);
+      transition: transform 0.4s cubic-bezier(.77,0,.175,1);
+      border-left: 1px solid var(--border);
+    }
+    .mobile-menu.open {
+      transform: translateX(0);
+    }
+    .mobile-menu a {
+      display: block;
+      padding: 14px 0;
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      font-weight: 500;
+      border-bottom: 1px solid var(--border);
+      transition: color var(--transition), padding-left var(--transition);
+    }
+    .mobile-menu a:hover {
+      color: var(--gold-light);
+      padding-left: 8px;
+    }
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      z-index: 1040;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.4s, visibility 0.4s;
+    }
+    .mobile-overlay.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+    }
+
+    /* ── Back Bar ─────────────────────────────────────── */
+    .back-bar {
+      margin-top: 72px;
+      padding: 14px 60px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.88rem;
+    }
+    .back-bar a {
+      color: var(--gold);
+      font-weight: 600;
+      transition: color var(--transition);
+    }
+    .back-bar a:hover { color: var(--gold-light); }
+    .back-bar a svg {
+      vertical-align: -2px;
+      margin-right: 6px;
+    }
+
+    /* ── Car Detail Grid ─────────────────────────────── */
+    .car-detail {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      min-height: 540px;
+    }
+    .car-gallery {
+      overflow: hidden;
+      background: var(--bg-card);
+      position: relative;
+    }
+    .car-gallery img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(.25,.8,.25,1);
+    }
+    .car-gallery:hover img {
+      transform: scale(1.07);
+    }
+    .car-summary {
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--bg);
+    }
+    .badge {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      background: rgba(201,169,110,0.1);
+      color: var(--gold);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      border: 1px solid var(--border);
+      width: fit-content;
+    }
+    .badge .dot {
+      width: 5px;
+      height: 5px;
+      background: var(--gold);
+      border-radius: 50%;
+    }
+    .car-summary h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+    .meta-row {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 0.88rem;
+    }
+    .meta-item svg { color: var(--gold); flex-shrink: 0; }
+    .meta-item strong { color: var(--text); font-weight: 600; }
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: var(--border);
+      margin-bottom: 28px;
+    }
+    .price-display {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .finance-note {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      margin-top: 6px;
+      margin-bottom: 32px;
+    }
+    .finance-note strong { color: var(--gold-light); font-weight: 600; }
+    .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg);
+      padding: 14px 32px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform var(--transition), box-shadow var(--transition);
+      letter-spacing: 0.3px;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(201,169,110,0.3);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--gold);
+      padding: 14px 32px;
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      letter-spacing: 0.3px;
+    }
+    .btn-outline:hover {
+      background: rgba(201,169,110,0.08);
+      border-color: var(--gold-light);
+      color: var(--gold-light);
+    }
+
+    /* ── Specs Section ────────────────────────────────── */
+    .specs-section {
+      background: var(--bg-elevated);
+      padding: 80px 60px;
+    }
+    .specs-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    .specs-subtitle {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      margin-bottom: 48px;
+    }
+    .specs-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); max-width: 1100px; margin: 0 auto; }
+    .spec-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border); transition: background 0.2s; }
+    .spec-item:hover { background: rgba(201,169,110,0.03); }
+    .spec-label { font-size: 0.78rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+    .spec-value { font-size: 0.95rem; font-weight: 600; color: var(--text); text-align: right; }
+
+    /* ── Payment Section ──────────────────────────────── */
+    .payment-section {
+      padding: 80px 60px;
+      background: var(--bg);
+    }
+    .payment-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 12px;
+    }
+    .payment-subtitle {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      margin-bottom: 48px;
+    }
+    .payment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .payment-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      transition: border-color var(--transition);
+    }
+    .payment-card:hover {
+      border-color: rgba(201,169,110,0.3);
+    }
+    .payment-card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+    .payment-card .card-desc {
+      color: var(--text-dim);
+      font-size: 0.88rem;
+      margin-bottom: 28px;
+      line-height: 1.5;
+    }
+    .full-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+
+    /* ── Dark Form Inputs ─────────────────────────────── */
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+    .form-group input, .form-group select {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      outline: none;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .form-group input:focus, .form-group select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.12);
+    }
+    .calc-result {
+      background: rgba(201,169,110,0.06);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      text-align: center;
+      margin-top: 8px;
+    }
+    .calc-result .label {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+    .calc-result .amount {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold-light);
+    }
+
+    /* ── Vehicle Customizer ────────────────────────────── */
+    .customizer-section {
+      background: var(--bg-elevated);
+      padding: 80px 60px;
+    }
+    .customizer-section h2 {
+      text-align: center;
+      font-size: 2rem;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+    .customizer-subtitle {
+      text-align: center;
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      margin-bottom: 48px;
+    }
+    .customizer-layout {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 32px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .customizer-preview {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+    .customizer-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.4s ease;
+    }
+    .customizer-controls {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+    }
+    .control-group {
+      margin-bottom: 28px;
+    }
+    .control-group:last-child {
+      margin-bottom: 0;
+    }
+    .control-label {
+      font-size: 0.73rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    .color-swatches {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .color-swatch {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      cursor: pointer;
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+    .color-swatch:hover {
+      transform: scale(1.15);
+    }
+    .color-swatch.active {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.25);
+    }
+    .swatch-item { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .color-swatch-label { font-size: 0.75rem; color: var(--text-dim); }
+    .swatch-white  { background: #a0a0a0; }
+    .swatch-black  { background: #1a1a1a; }
+    .reset-btn {
+      width: 100%;
+      padding: 12px 16px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-dim);
+      font-size: 0.88rem;
+      font-family: var(--font-body, 'Inter', sans-serif);
+      cursor: pointer;
+      transition: all var(--transition);
+      margin-top: 8px;
+    }
+    .reset-btn:hover {
+      border-color: rgba(201,169,110,0.3);
+      color: var(--gold);
+      background: rgba(201,169,110,0.05);
+    }
+
+    /* ── Customizer Responsive ───────────────────────── */
+    @media (max-width: 768px) {
+      .customizer-section { padding: 48px 24px; }
+      .customizer-layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── Footer ───────────────────────────────────────── */
+    footer {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 48px 60px 32px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    .footer-brand .logo { font-size: 1.4rem; }
+    .footer-brand p {
+      color: var(--text-dim);
+      font-size: 0.88rem;
+      margin-top: 12px;
+      line-height: 1.6;
+      max-width: 280px;
+    }
+    .footer-col h4 {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      font-weight: 700;
+    }
+    .footer-col a {
+      display: block;
+      color: var(--text-dim);
+      font-size: 0.88rem;
+      padding: 5px 0;
+      transition: color var(--transition), padding-left var(--transition);
+    }
+    .footer-col a:hover {
+      color: var(--gold-light);
+      padding-left: 4px;
+    }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Responsive ───────────────────────────────────── */
+    @media (max-width: 1024px) {
+      .specs-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+      .back-bar { padding: 14px 24px; }
+      .car-detail { grid-template-columns: 1fr; }
+      .car-summary { padding: 32px 24px; }
+      .car-summary h1 { font-size: 1.8rem; }
+      .price-display { font-size: 2.2rem; }
+      .specs-section { padding: 48px 24px; }
+      .specs-grid { grid-template-columns: 1fr; }
+      .payment-section { padding: 48px 24px; }
+      .payment-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+      footer { padding: 40px 24px 24px; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .meta-row { gap: 12px; }
+      .cta-row { flex-direction: column; }
+      .cta-row button { width: 100%; }
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAV ═══ -->
+  <nav>
+    <a href="index.html#inventory" class="logo">Auto<span>Prime</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#inventory">Inventory</a></li>
+      <li><a href="index.html#why-us">Why Us</a></li>
+      <li><a href="index.html#testimonials">Testimonials</a></li>
+      <li><a href="index.html#contact" class="nav-cta">Contact Us</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html#inventory">Inventory</a>
+    <a href="index.html#why-us">Why Us</a>
+    <a href="index.html#testimonials">Testimonials</a>
+    <a href="index.html#contact">Contact Us</a>
+  </div>
+
+  <!-- ═══ BACK BAR ═══ -->
+  <div class="back-bar">
+    <a href="index.html#inventory">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Inventory
+    </a>
+  </div>
+
+  <!-- ═══ CAR DETAIL ═══ -->
+  <section class="car-detail">
+    <div class="car-gallery reveal">
+      <img src="images/ford-explorer.jpg" alt="2024 Ford Explorer XLT in Carbonized Gray" />
+    </div>
+    <div class="car-summary reveal">
+      <div class="badge">Petrol <span class="dot"></span> Certified</div>
+      <h1>2024 Ford Explorer XLT</h1>
+      <div class="meta-row">
+        <div class="meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <strong>5,200</strong>&nbsp;miles
+        </div>
+        <div class="meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01"/></svg>
+          <strong>Automatic</strong>
+        </div>
+        <div class="meta-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          <strong>Carbonized Gray</strong>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div class="price-display" id="heroPrice">$45,200</div>
+      <p class="finance-note" id="heroFinance">Finance from <strong>$629/mo</strong> with approved credit</p>
+      <div class="cta-row">
+        <button class="btn-primary" onclick="document.getElementById('payment').scrollIntoView({behavior:'smooth'})">Calculate Payment</button>
+        <button class="btn-outline" onclick="window.location.href='index.html#contact'">Schedule Test Drive</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ SPECS ═══ -->
+  <section class="specs-section" id="specs">
+    <h2 class="reveal">Vehicle Specifications</h2>
+    <p class="specs-subtitle reveal">Complete details for the 2024 Ford Explorer XLT</p>
+    <div class="specs-grid">
+      <div class="spec-item reveal">
+        <div class="spec-label">Year</div>
+        <div class="spec-value">2024</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Make</div>
+        <div class="spec-value">Ford</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Model</div>
+        <div class="spec-value">Explorer XLT</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Mileage</div>
+        <div class="spec-value">5,200 mi</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Engine</div>
+        <div class="spec-value">2.3L EcoBoost I4</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Transmission</div>
+        <div class="spec-value">10-Speed Automatic</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Fuel Type</div>
+        <div class="spec-value">Petrol</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Fuel Economy</div>
+        <div class="spec-value">21 city / 28 hwy</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Drivetrain</div>
+        <div class="spec-value">4-Wheel Drive</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Seating</div>
+        <div class="spec-value">7 Passengers</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Exterior Color</div>
+        <div class="spec-value">Carbonized Gray</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">VIN</div>
+        <div class="spec-value">1FM5K8D83RGA12345</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CUSTOMIZER ═══ -->
+  <section class="customizer-section" id="customizer">
+    <h2 class="reveal">Customize Your Vehicle</h2>
+    <p class="customizer-subtitle reveal">Visualize your perfect Explorer in different colors</p>
+    <div class="customizer-layout reveal">
+      <!-- Preview -->
+      <div class="customizer-preview">
+        <img id="customizerImg" src="images/ford-explorer.jpg" alt="Customize 2024 Ford Explorer XLT" style="transition: opacity 0.4s ease;" />
+      </div>
+      <!-- Controls -->
+      <div class="customizer-controls">
+        <div class="control-group">
+          <div class="control-label">Exterior Color</div>
+          <div id="activeColorName" style="font-size:0.8rem; color:var(--gold); margin-bottom:12px; font-weight:500;">Original (Gray)</div>
+          <div class="color-swatches">
+            <div class="swatch-item"><div class="color-swatch swatch-white active" onclick="setColor(this, 'original')"></div><span class="color-swatch-label">Original</span></div>
+            <div class="swatch-item"><div class="color-swatch swatch-black" onclick="setColor(this, 'black')"></div><span class="color-swatch-label">Black</span></div>
+          </div>
+        </div>
+        <button class="reset-btn" onclick="resetCustomizer()">Reset All Options</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ PAYMENT ═══ -->
+  <section class="payment-section" id="payment">
+    <h2 class="reveal">Payment Options</h2>
+    <p class="payment-subtitle reveal">Choose the plan that works best for you</p>
+    <div class="payment-grid">
+      <!-- Pay in Full -->
+      <div class="payment-card reveal">
+        <h3>Pay in Full</h3>
+        <p class="card-desc">One-time payment with no interest or monthly commitments.</p>
+        <div class="full-price">$45,200</div>
+        <button class="btn-primary" style="width:100%;margin-top:12px" onclick="window.location.href='index.html#contact'">Inquire Now</button>
+      </div>
+      <!-- Finance Calculator -->
+      <div class="payment-card reveal">
+        <h3>Finance This Vehicle</h3>
+        <p class="card-desc">Estimate your monthly payment with our calculator.</p>
+        <div class="form-group">
+          <label for="fe-down">Down Payment ($)</label>
+          <input type="number" id="fe-down" value="5000" min="0" max="45200" oninput="calcFE()" />
+        </div>
+        <div class="form-group">
+          <label for="fe-term">Loan Term (months)</label>
+          <select id="fe-term" onchange="calcFE()">
+            <option value="36">36 months</option>
+            <option value="48">48 months</option>
+            <option value="60" selected>60 months</option>
+            <option value="72">72 months</option>
+            <option value="84">84 months</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="fe-apr">APR (%)</label>
+          <input type="number" id="fe-apr" value="5.9" min="0" max="30" step="0.1" oninput="calcFE()" />
+        </div>
+        <div class="calc-result">
+          <div class="label">Estimated Monthly Payment</div>
+          <div class="amount" id="fe-result">$629/mo</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html#inventory" class="logo">Auto<span>Prime</span></a>
+        <p>Premium pre-owned vehicles with certified quality. Your trusted partner for luxury automotive experiences.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Showroom</h4>
+        <a href="index.html#inventory">Inventory</a>
+        <a href="index.html#why-us">Why Us</a>
+        <a href="index.html#testimonials">Testimonials</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <a href="index.html#contact">Contact</a>
+        <a href="#">FAQ</a>
+        <a href="#">Financing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Disclaimer</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2024 AutoPrime. All rights reserved.</span>
+      <span>Crafted with precision</span>
+    </div>
+  </footer>
+
+  <!-- ═══ JAVASCRIPT ═══ -->
+  <script>
+    /* ── Hamburger & Mobile Menu ─────────────────────── */
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+
+    function toggleMenu() {
+      hamburger.classList.toggle('active');
+      mobileMenu.classList.toggle('open');
+      mobileOverlay.classList.toggle('open');
+      mobileOverlay.style.display = mobileOverlay.classList.contains('open') ? 'block' : 'none';
+    }
+    hamburger.addEventListener('click', toggleMenu);
+    mobileOverlay.addEventListener('click', toggleMenu);
+    mobileMenu.querySelectorAll('a').forEach(link => link.addEventListener('click', toggleMenu));
+
+    /* ── Scroll Reveal (Intersection Observer) ───────── */
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    /* ── Finance Calculator ──────────────────────────── */
+    function calcFE() {
+      const price = 45200;
+      const down = Math.max(0, Math.min(price, parseFloat(document.getElementById('fe-down').value) || 0));
+      const term = parseInt(document.getElementById('fe-term').value);
+      const apr = parseFloat(document.getElementById('fe-apr').value) || 0;
+      const principal = price - down;
+
+      let monthly;
+      if (apr === 0) {
+        monthly = principal / term;
+      } else {
+        const r = (apr / 100) / 12;
+        monthly = principal * (r * Math.pow(1 + r, term)) / (Math.pow(1 + r, term) - 1);
+      }
+      document.getElementById('fe-result').textContent = '$' + Math.round(monthly).toLocaleString() + '/mo';
+    }
+    calcFE();
+
+    /* ── Vehicle Customizer ─────────────────────────── */
+    const colorImages = { original: 'images/ford-explorer.jpg', black: 'images/black-ford-explorer.jpg' };
+    const colorLabels = { original: 'Original (Gray)', black: 'Midnight Black' };
+    const activeColorName = document.getElementById('activeColorName');
+    const previewImg = document.getElementById('customizerImg');
+    function setColor(swatch, color) {
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+      swatch.classList.add('active');
+      previewImg.style.opacity = '0';
+      const tmp = new Image();
+      tmp.onload = function() { previewImg.src = colorImages[color]; previewImg.style.opacity = '1'; };
+      tmp.src = colorImages[color];
+      if (activeColorName) activeColorName.textContent = colorLabels[color];
+      var hp = document.getElementById('heroPrice');
+      var hf = document.getElementById('heroFinance');
+      if (color === 'black') {
+        hp.innerHTML = '$45,280 <span style="font-size:0.7em;color:var(--text-muted);font-weight:400">(+$80 Black Edition)</span>';
+        hf.innerHTML = 'Finance from <strong>$630/mo</strong> with approved credit';
+      } else {
+        hp.textContent = '$45,200';
+        hf.innerHTML = 'Finance from <strong>$629/mo</strong> with approved credit';
+      }
+    }
+
+    function resetCustomizer() {
+      const originalSwatch = document.querySelector('.swatch-white');
+      if (originalSwatch) setColor(originalSwatch, 'original');
+    }
+  </script>
+</body>
+</html>

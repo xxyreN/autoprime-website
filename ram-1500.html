@@ -1,0 +1,1155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2023 RAM 1500 Big Horn — AutoPrime</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #111111;
+      --bg-elevated: #161616;
+      --gold: #c9a96e;
+      --gold-light: #e2c992;
+      --gold-dark: #a8883d;
+      --text: #f0ece2;
+      --text-dim: #8a8475;
+      --text-muted: #5a5549;
+      --border: rgba(201,169,110,0.12);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
+
+    /* ── Glassmorphism Nav ── */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 60px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      background: rgba(10,10,10,0.72);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: -1px;
+      text-decoration: none;
+    }
+
+    .logo span { color: var(--text); }
+
+    .nav-links { list-style: none; display: flex; gap: 32px; align-items: center; }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text-dim);
+      font-weight: 500;
+      font-size: 0.9rem;
+      letter-spacing: 0.3px;
+      transition: color 0.3s;
+    }
+
+    .nav-links a:hover { color: var(--gold-light); }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg) !important;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 700 !important;
+      transition: transform 0.2s, box-shadow 0.2s !important;
+    }
+
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(201,169,110,0.3);
+    }
+
+    /* ── Hamburger Menu ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+      z-index: 1001;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 26px;
+      height: 2px;
+      background: var(--gold);
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* ── Back Bar ── */
+    .back-bar {
+      padding: 14px 60px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+      margin-top: 62px;
+    }
+
+    .back-bar a {
+      color: var(--gold);
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .back-bar a:hover { color: var(--gold-light); }
+
+    .back-bar span { color: var(--text-muted); }
+
+    /* ── Car Detail Grid ── */
+    .car-detail {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      min-height: 540px;
+    }
+
+    .car-gallery {
+      overflow: hidden;
+      background: var(--bg-card);
+      position: relative;
+    }
+
+    .car-gallery img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .car-gallery:hover img {
+      transform: scale(1.06);
+    }
+
+    .car-gallery::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      background: linear-gradient(to top, rgba(10,10,10,0.5), transparent);
+      pointer-events: none;
+    }
+
+    .car-summary {
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--bg);
+    }
+
+    .badge {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      background: linear-gradient(135deg, rgba(201,169,110,0.15), rgba(201,169,110,0.05));
+      color: var(--gold);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border: 1px solid var(--border);
+      width: fit-content;
+    }
+
+    .car-summary h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 16px;
+      color: var(--text);
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin-bottom: 28px;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 0.88rem;
+    }
+
+    .meta-item svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 2;
+    }
+
+    .meta-item strong { color: var(--text); }
+
+    .price-display {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .price-sub {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-top: 6px;
+      margin-bottom: 32px;
+    }
+
+    .cta-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg);
+      padding: 15px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 0.3px;
+      transition: transform 0.2s, box-shadow 0.3s;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(201,169,110,0.25);
+    }
+
+    .btn-outline {
+      border: 2px solid var(--gold);
+      color: var(--gold);
+      padding: 15px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.92rem;
+      letter-spacing: 0.3px;
+      transition: all 0.3s;
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      background: rgba(201,169,110,0.1);
+      border-color: var(--gold-light);
+      color: var(--gold-light);
+    }
+
+    /* ── Specs Section ── */
+    .specs-section {
+      padding: 70px 60px;
+      background: var(--bg-card);
+    }
+
+    .specs-section h2 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: var(--text);
+    }
+
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin-bottom: 36px;
+    }
+
+    .specs-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); }
+    .spec-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border); transition: background 0.2s; }
+    .spec-item:hover { background: rgba(201,169,110,0.03); }
+    .spec-label { font-size: 0.78rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+    .spec-value { font-size: 0.95rem; font-weight: 600; color: var(--text); text-align: right; }
+
+    /* ── Payment Section ── */
+    .payment-section {
+      padding: 70px 60px;
+      background: var(--bg);
+    }
+
+    .payment-section h2 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .payment-section > p {
+      color: var(--text-muted);
+      margin-bottom: 36px;
+      font-size: 0.92rem;
+    }
+
+    .payment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .pay-card {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 38px;
+      background: var(--bg-card);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .pay-card:hover {
+      border-color: rgba(201,169,110,0.3);
+    }
+
+    .pay-card.featured {
+      border-color: var(--gold);
+      background: linear-gradient(135deg, rgba(201,169,110,0.06), rgba(201,169,110,0.02));
+      box-shadow: 0 0 40px rgba(201,169,110,0.08);
+    }
+
+    .pay-card h3 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .pay-card .subtitle {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+
+    .full-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem;
+      font-weight: 900;
+      color: var(--gold);
+      margin-bottom: 6px;
+    }
+
+    .full-price-note {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      margin-bottom: 24px;
+    }
+
+    .pay-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .pay-features li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-dim);
+      font-size: 0.88rem;
+    }
+
+    .pay-features li svg {
+      width: 16px;
+      height: 16px;
+      stroke: var(--gold);
+      fill: none;
+      stroke-width: 2;
+      flex-shrink: 0;
+    }
+
+    /* ── Dark Form Inputs ── */
+    .calc-group {
+      margin-bottom: 18px;
+    }
+
+    .calc-group label {
+      display: block;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 6px;
+      font-weight: 600;
+    }
+
+    .calc-group input,
+    .calc-group select {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .calc-group input:focus,
+    .calc-group select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.15);
+    }
+
+    .calc-group select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%238a8475' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    .calc-result {
+      background: linear-gradient(135deg, rgba(201,169,110,0.1), rgba(201,169,110,0.04));
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .calc-result .amount {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--gold);
+    }
+
+    .calc-result .per-month {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      margin-top: 2px;
+    }
+
+    /* ── Vehicle Customizer ── */
+    .customizer-section {
+      padding: 70px 60px;
+      background: var(--bg);
+    }
+
+    .customizer-section h2 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .customizer-section .section-subtitle {
+      color: var(--text-muted);
+      font-size: 0.92rem;
+      margin-bottom: 36px;
+    }
+
+    .customizer-layout {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .customizer-preview {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+
+    .customizer-preview img {
+      width: 100%;
+      display: block;
+      transition: filter 0.4s ease;
+    }
+
+    .customizer-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .control-group h4 {
+      font-family: var(--font-body, 'Inter', sans-serif);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-dim);
+      margin-bottom: 12px;
+    }
+
+    .color-swatches {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .color-swatch {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+      position: relative;
+    }
+
+    .color-swatch:hover {
+      transform: scale(1.12);
+    }
+
+    .color-swatch.active {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.25);
+    }
+
+    .color-swatch[data-color="black"]  { background: #1a1a1a; }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .toggle-label {
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      cursor: pointer;
+      transition: background 0.3s, border-color 0.3s;
+    }
+
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      background: var(--text-dim);
+      border-radius: 50%;
+      transition: transform 0.3s, background 0.3s;
+    }
+
+    .toggle-switch.active {
+      background: rgba(201,169,110,0.2);
+      border-color: var(--gold);
+    }
+
+    .toggle-switch.active::after {
+      transform: translateX(22px);
+      background: var(--gold);
+    }
+
+    .stripe-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .stripe-btn {
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--text-dim);
+      font-family: var(--font-body, 'Inter', sans-serif);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .stripe-btn:hover {
+      border-color: rgba(201,169,110,0.3);
+      color: var(--text);
+    }
+
+    .stripe-btn.active {
+      border-color: var(--gold);
+      background: rgba(201,169,110,0.12);
+      color: var(--gold);
+    }
+
+    .customizer-text-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font-body, 'Inter', sans-serif);
+      font-size: 0.92rem;
+      font-weight: 600;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .customizer-text-input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.15);
+    }
+
+    .reset-btn {
+      padding: 12px 28px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      color: var(--text-dim);
+      font-family: var(--font-body, 'Inter', sans-serif);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+      text-align: center;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .reset-btn:hover {
+      border-color: rgba(201,169,110,0.3);
+      color: var(--text);
+      background: rgba(201,169,110,0.06);
+    }
+
+    @media (max-width: 768px) {
+      .customizer-section { padding: 48px 24px; }
+      .customizer-layout { grid-template-columns: 1fr; }
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 50px 60px 30px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand .logo {
+      display: inline-block;
+      margin-bottom: 14px;
+    }
+
+    .footer-brand p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      line-height: 1.7;
+      max-width: 300px;
+    }
+
+    .footer-col h4 {
+      font-family: 'Inter', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--gold);
+      margin-bottom: 18px;
+    }
+
+    .footer-col ul { list-style: none; }
+
+    .footer-col ul li { margin-bottom: 10px; }
+
+    .footer-col ul a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color 0.2s;
+    }
+
+    .footer-col ul a:hover { color: var(--gold-light); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+
+    .footer-bottom a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+
+    .footer-bottom a:hover { color: var(--gold); }
+
+    /* ── Scroll Reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .specs-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 16px 24px; }
+
+      .hamburger { display: flex; }
+
+      .nav-links {
+        position: fixed;
+        top: 0;
+        right: -100%;
+        width: 280px;
+        height: 100vh;
+        background: rgba(17,17,17,0.98);
+        backdrop-filter: blur(20px);
+        flex-direction: column;
+        padding: 80px 32px 32px;
+        gap: 0;
+        transition: right 0.35s ease;
+        border-left: 1px solid var(--border);
+      }
+
+      .nav-links.open { right: 0; }
+
+      .nav-links li { padding: 14px 0; border-bottom: 1px solid var(--border); width: 100%; }
+
+      .nav-links a { font-size: 1rem; }
+
+      .back-bar { padding: 12px 24px; }
+
+      .car-detail { grid-template-columns: 1fr; }
+
+      .car-gallery { max-height: 320px; }
+
+      .car-summary { padding: 32px 24px; }
+
+      .car-summary h1 { font-size: 1.8rem; }
+
+      .price-display { font-size: 2.2rem; }
+
+      .specs-section { padding: 48px 24px; }
+
+      .specs-grid { grid-template-columns: 1fr; }
+
+      .payment-section { padding: 48px 24px; }
+
+      .payment-grid { grid-template-columns: 1fr; }
+
+      footer { padding: 40px 24px 24px; }
+
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+
+      .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .specs-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .meta-row { gap: 14px; }
+      .cta-buttons { flex-direction: column; }
+      .cta-buttons a { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ── -->
+  <nav>
+    <a href="index.html#inventory" class="logo">Auto<span>Prime</span></a>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html#inventory">Home</a></li>
+      <li><a href="index.html#inventory">Inventory</a></li>
+      <li><a href="#">Finance</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#" class="nav-cta">Contact Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── Back Bar ── -->
+  <div class="back-bar">
+    <a href="index.html#inventory">&larr; Back to Inventory</a>
+    <span> &nbsp;/&nbsp; 2023 RAM 1500 Big Horn</span>
+  </div>
+
+  <!-- ── Car Detail ── -->
+  <section class="car-detail">
+    <div class="car-gallery reveal">
+      <img src="images/ram-1500.jpg" alt="2023 RAM 1500 Big Horn in Granite Crystal" />
+    </div>
+    <div class="car-summary reveal">
+      <div class="badge">Diesel &middot; Certified</div>
+      <h1>2023 RAM 1500<br />Big Horn</h1>
+      <div class="meta-row">
+        <div class="meta-item">
+          <svg viewBox="0 0 24 24"><path d="M12 20V4M4 12l8-8 8 8"/></svg>
+          <strong>9,100</strong> miles
+        </div>
+        <div class="meta-item">
+          <svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M14 12h4"/></svg>
+          Automatic
+        </div>
+        <div class="meta-item">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          Granite Crystal
+        </div>
+      </div>
+      <div class="price-display" id="heroPrice">$52,000</div>
+      <div class="price-sub" id="heroFinance">Finance from <strong>$719/mo</strong> with approved credit</div>
+      <div class="cta-buttons">
+        <a href="#" class="btn-primary">Schedule Test Drive</a>
+        <a href="#payment" class="btn-outline">Calculate Payment</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Specs ── -->
+  <section class="specs-section">
+    <div class="reveal">
+      <h2>Vehicle Specifications</h2>
+      <p class="section-subtitle">Complete details for this certified pre-owned RAM 1500</p>
+    </div>
+    <div class="specs-grid">
+      <div class="spec-item reveal">
+        <div class="spec-label">Year</div>
+        <div class="spec-value">2023</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Make</div>
+        <div class="spec-value">RAM</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Model</div>
+        <div class="spec-value">1500 Big Horn</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Mileage</div>
+        <div class="spec-value">9,100 mi</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Engine</div>
+        <div class="spec-value">3.0L EcoDiesel V6</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Transmission</div>
+        <div class="spec-value">8-Speed Automatic</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Fuel Type</div>
+        <div class="spec-value">Diesel</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Fuel Economy</div>
+        <div class="spec-value">22 city / 32 hwy</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Drivetrain</div>
+        <div class="spec-value">4-Wheel Drive</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Towing Capacity</div>
+        <div class="spec-value">12,560 lbs</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">Exterior Color</div>
+        <div class="spec-value">Granite Crystal</div>
+      </div>
+      <div class="spec-item reveal">
+        <div class="spec-label">VIN</div>
+        <div class="spec-value">1C6SRFFT3PN123456</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Vehicle Customizer ── -->
+  <section class="customizer-section">
+    <div class="reveal">
+      <h2>Customize Your Vehicle</h2>
+      <p class="section-subtitle">Visualize your perfect RAM 1500 with colors, stripes, and more</p>
+    </div>
+    <div class="customizer-layout">
+      <div class="customizer-preview reveal" id="customizerPreview">
+        <img src="images/ram-1500.jpg" alt="Customize 2023 RAM 1500 Big Horn" id="customizerImg" style="transition: opacity 0.4s ease;" />
+      </div>
+      <div class="customizer-controls reveal">
+        <div class="control-group">
+          <h4>Exterior Color</h4>
+          <div id="activeColorName" style="font-size:0.8rem; color:var(--gold); margin-bottom:12px; font-weight:500;">Original (Gray)</div>
+          <div class="color-swatches">
+            <div class="color-swatch active" data-color="original" title="Original (Gray)" onclick="setColor(this, 'original')" style="background:#8a8a8a;"></div>
+            <div class="color-swatch" data-color="black" title="Midnight Black" onclick="setColor(this, 'black')"></div>
+          </div>
+        </div>
+        <button class="reset-btn" onclick="resetCustomizer()">Reset All</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Payment ── -->
+  <section class="payment-section" id="payment">
+    <div class="reveal">
+      <h2>Payment Options</h2>
+      <p>Choose the plan that works best for your budget</p>
+    </div>
+    <div class="payment-grid">
+      <!-- Pay in Full -->
+      <div class="pay-card reveal">
+        <h3>Pay in Full</h3>
+        <p class="subtitle">One-time payment, no interest</p>
+        <div class="full-price">$52,000</div>
+        <p class="full-price-note">Total price including all fees</p>
+        <ul class="pay-features">
+          <li>
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            No interest charges
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Immediate full ownership
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            Fastest transaction process
+          </li>
+        </ul>
+      </div>
+
+      <!-- Finance Calculator -->
+      <div class="pay-card featured reveal">
+        <h3>Finance This Vehicle</h3>
+        <p class="subtitle">Customize your monthly payment</p>
+        <div class="calc-group">
+          <label for="ram-down">Down Payment ($)</label>
+          <input type="number" id="ram-down" value="6000" min="0" max="52000" oninput="calcRAM()" />
+        </div>
+        <div class="calc-group">
+          <label for="ram-term">Loan Term</label>
+          <select id="ram-term" onchange="calcRAM()">
+            <option value="36">36 months</option>
+            <option value="48">48 months</option>
+            <option value="60" selected>60 months</option>
+            <option value="72">72 months</option>
+            <option value="84">84 months</option>
+          </select>
+        </div>
+        <div class="calc-group">
+          <label for="ram-apr">Interest Rate (APR %)</label>
+          <input type="number" id="ram-apr" value="5.9" min="0" max="25" step="0.1" oninput="calcRAM()" />
+        </div>
+        <div class="calc-result" id="ram-result">
+          <div class="amount">$719</div>
+          <div class="per-month">Estimated monthly payment</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html#inventory" class="logo">Auto<span>Prime</span></a>
+        <p>Premium pre-owned vehicles with transparent pricing and certified quality you can trust.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Inventory</h4>
+        <ul>
+          <li><a href="#">Sedans</a></li>
+          <li><a href="#">SUVs</a></li>
+          <li><a href="#">Trucks</a></li>
+          <li><a href="#">Electric</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Reviews</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Financing</a></li>
+          <li><a href="#">Trade-In</a></li>
+          <li><a href="#">Warranty</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2025 AutoPrime. All rights reserved.</span>
+      <span><a href="#">Privacy</a> &nbsp;&middot;&nbsp; <a href="#">Terms</a></span>
+    </div>
+  </footer>
+
+  <!-- ── Scripts ── -->
+  <script>
+    // Hamburger menu toggle
+    const hamburger = document.getElementById('hamburger');
+    const navLinks = document.getElementById('navLinks');
+
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('active');
+      navLinks.classList.toggle('open');
+    });
+
+    // Close menu on link click
+    navLinks.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        hamburger.classList.remove('active');
+        navLinks.classList.remove('open');
+      });
+    });
+
+    // Finance calculator
+    function calcRAM() {
+      const price = 52000;
+      const down = parseFloat(document.getElementById('ram-down').value) || 0;
+      const term = parseInt(document.getElementById('ram-term').value);
+      const apr = parseFloat(document.getElementById('ram-apr').value) || 0;
+
+      const principal = price - down;
+      if (principal <= 0) {
+        document.getElementById('ram-result').innerHTML =
+          '<div class="amount">$0</div><div class="per-month">Fully covered by down payment</div>';
+        return;
+      }
+
+      let monthly;
+      if (apr === 0) {
+        monthly = principal / term;
+      } else {
+        const r = (apr / 100) / 12;
+        monthly = principal * (r * Math.pow(1 + r, term)) / (Math.pow(1 + r, term) - 1);
+      }
+
+      document.getElementById('ram-result').innerHTML =
+        '<div class="amount">$' + Math.round(monthly).toLocaleString() + '</div>' +
+        '<div class="per-month">Estimated monthly payment</div>';
+    }
+
+    // Initial calculation
+    calcRAM();
+
+    // Scroll reveal with Intersection Observer
+    const revealElements = document.querySelectorAll('.reveal');
+
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          // Stagger animations slightly
+          setTimeout(() => {
+            entry.target.classList.add('visible');
+          }, index * 80);
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.1,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // ── Vehicle Customizer ──
+    const colorImages = { original: 'images/ram-1500.jpg', black: 'images/black-ram-1500.jpg' };
+    const colorLabels = { original: 'Original (Gray)', black: 'Midnight Black' };
+    const activeColorName = document.getElementById('activeColorName');
+    const previewImg = document.getElementById('customizerImg');
+    function setColor(swatch, color) {
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+      swatch.classList.add('active');
+      previewImg.style.opacity = '0';
+      const tmp = new Image();
+      tmp.onload = function() { previewImg.src = colorImages[color]; previewImg.style.opacity = '1'; };
+      tmp.src = colorImages[color];
+      if (activeColorName) activeColorName.textContent = colorLabels[color];
+      var hp = document.getElementById('heroPrice');
+      var hf = document.getElementById('heroFinance');
+      if (color === 'black') {
+        hp.innerHTML = '$52,085 <span style="font-size:0.7em;color:var(--text-muted);font-weight:400">(+$85 Black Edition)</span>';
+        hf.innerHTML = 'Finance from <strong>$720/mo</strong> with approved credit';
+      } else {
+        hp.textContent = '$52,000';
+        hf.innerHTML = 'Finance from <strong>$719/mo</strong> with approved credit';
+      }
+    }
+
+    function resetCustomizer() {
+      const originalSwatch = document.querySelector('.color-swatch[data-color="original"]');
+      setColor(originalSwatch, 'original');
+    }
+  </script>
+
+</body>
+</html>

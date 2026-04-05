@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AutoPrime — Full Inventory</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #111111;
+      --bg-elevated: #161616;
+      --gold: #c9a96e;
+      --gold-light: #e2c992;
+      --gold-dark: #a8883d;
+      --text: #f0ece2;
+      --text-dim: #8a8475;
+      --text-muted: #5a5549;
+      --border: rgba(201,169,110,0.12);
+      --border-hover: rgba(201,169,110,0.3);
+      --glow: rgba(201,169,110,0.08);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--bg);
+      overflow-x: hidden;
+    }
+
+    /* ANIMATIONS */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+    .reveal-delay-5 { transition-delay: 0.5s; }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(201,169,110,0.1); }
+      50% { box-shadow: 0 0 40px rgba(201,169,110,0.2); }
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 60px;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: background 0.3s;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--gold);
+      letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+    .logo span { color: var(--text); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 36px;
+      align-items: center;
+    }
+
+    nav ul a {
+      text-decoration: none;
+      color: var(--text-dim);
+      font-weight: 500;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    nav ul a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width 0.3s;
+    }
+
+    nav ul a:hover { color: var(--gold); }
+    nav ul a:hover::after { width: 100%; }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg) !important;
+      padding: 10px 24px;
+      border-radius: 4px;
+      font-weight: 600 !important;
+      letter-spacing: 1px;
+      font-size: 0.8rem !important;
+      transition: all 0.3s !important;
+    }
+    .nav-cta::after { display: none !important; }
+    .nav-cta:hover {
+      background: linear-gradient(135deg, var(--gold-light), var(--gold)) !important;
+      color: var(--bg) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(201,169,110,0.3);
+    }
+
+    /* MOBILE MENU */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      z-index: 200;
+    }
+    .hamburger span {
+      width: 24px;
+      height: 2px;
+      background: var(--gold);
+      transition: all 0.3s;
+      display: block;
+    }
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    .mobile-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 98;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .mobile-overlay.active { opacity: 1; visibility: visible; pointer-events: auto; }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 0; right: -300px;
+      width: 300px; height: 100vh;
+      background: var(--bg-card);
+      border-left: 1px solid var(--border);
+      z-index: 99;
+      padding: 80px 40px 40px;
+      transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .mobile-menu.active { right: 0; }
+    .mobile-menu a {
+      display: block;
+      padding: 16px 0;
+      color: var(--text);
+      text-decoration: none;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.3s, padding-left 0.3s;
+    }
+    .mobile-menu a:hover { color: var(--gold); padding-left: 10px; }
+
+    /* HERO BANNER */
+    .page-hero {
+      padding: 140px 60px 80px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,169,110,0.06) 0%, transparent 70%),
+        radial-gradient(ellipse 60% 50% at 20% 80%, rgba(201,169,110,0.03) 0%, transparent 60%);
+      animation: gradient-shift 8s ease infinite;
+      background-size: 200% 200%;
+    }
+
+    .page-hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 120px;
+      background: linear-gradient(to top, var(--bg), transparent);
+    }
+
+    .page-hero .line-accent {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(to right, var(--gold), transparent);
+      margin: 0 auto 16px;
+    }
+
+    .page-hero .section-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+
+    .page-hero h1 {
+      font-family: var(--font-display);
+      font-size: 3.4rem;
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.15;
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-hero h1 .accent {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-hero p {
+      color: var(--text-dim);
+      margin-top: 16px;
+      font-size: 1.1rem;
+      line-height: 1.7;
+      max-width: 540px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* FILTER BAR */
+    .filter-bar {
+      padding: 0 60px 60px;
+    }
+
+    .filter-bar-inner {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 28px 32px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .filter-group {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .filter-group label {
+      display: block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .filter-group input,
+    .filter-group select {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      transition: border-color 0.3s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .filter-group input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .filter-group input:focus,
+    .filter-group select:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+
+    .filter-group select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%238a8475' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    .results-count {
+      text-align: center;
+      padding: 0 60px 40px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+    }
+
+    .results-count strong {
+      color: var(--gold);
+      font-weight: 600;
+    }
+
+    /* SECTIONS */
+    .section {
+      padding: 0 60px 120px;
+    }
+
+    /* CAR CARDS */
+    .cars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .car-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .car-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 8px;
+      padding: 1px;
+      background: linear-gradient(135deg, transparent 40%, var(--gold) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      opacity: 0;
+      transition: opacity 0.4s;
+      pointer-events: none;
+    }
+
+    .car-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 40px var(--glow);
+    }
+    .car-card:hover::before { opacity: 1; }
+
+    .car-card.hidden {
+      display: none;
+    }
+
+    .car-img {
+      height: 220px;
+      overflow: hidden;
+      position: relative;
+    }
+    .car-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .car-card:hover .car-img img { transform: scale(1.08); }
+
+    .car-img::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(to top, var(--bg-card), transparent);
+      z-index: 2;
+    }
+
+    .fuel-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 5;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 6px 12px;
+      border-radius: 4px;
+      border: 1px solid rgba(201,169,110,0.25);
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .car-info { padding: 24px; }
+
+    .car-info h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .car-meta {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 18px;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      flex-wrap: wrap;
+    }
+    .car-meta span {
+      padding: 4px 10px;
+      background: rgba(201,169,110,0.06);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+    }
+
+    .car-price {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--gold);
+    }
+    .car-price span {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .car-btn {
+      display: block;
+      text-align: center;
+      margin-top: 18px;
+      padding: 12px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: all 0.3s;
+    }
+    .car-btn:hover {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--bg);
+    }
+
+    /* NO RESULTS */
+    .no-results {
+      display: none;
+      text-align: center;
+      padding: 80px 24px;
+      grid-column: 1 / -1;
+    }
+
+    .no-results.visible {
+      display: block;
+    }
+
+    .no-results h3 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text-dim);
+    }
+
+    .no-results p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 48px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer .logo {
+      font-size: 1.4rem;
+    }
+
+    footer p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    footer a {
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    footer a:hover { color: var(--gold); }
+
+    /* PAGE LOADER */
+    .page-loader {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s ease, filter 0.8s ease;
+    }
+    .page-loader.hidden { opacity: 0; filter: blur(12px); pointer-events: none; }
+    .loader-logo {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--gold);
+      animation: pulse-glow 1.5s ease infinite;
+    }
+    .loader-logo span { color: var(--text); }
+
+    /* BACK TO TOP */
+    .back-to-top {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      width: 44px;
+      height: 44px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 1.1rem;
+      cursor: pointer;
+      z-index: 90;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: all 0.3s;
+      pointer-events: none;
+      text-decoration: none;
+    }
+    .back-to-top.visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .back-to-top:hover {
+      background: var(--gold);
+      color: var(--bg);
+      border-color: var(--gold);
+    }
+
+    /* COOKIE BANNER */
+    .cookie-banner {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 20px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      z-index: 95;
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .cookie-banner.visible { transform: translateY(0); }
+    .cookie-banner p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+    .cookie-banner p a { color: var(--gold); text-decoration: underline; }
+    .cookie-buttons { display: flex; gap: 10px; flex-shrink: 0; }
+    .cookie-accept {
+      padding: 10px 24px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg);
+      border: none;
+      border-radius: 4px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: all 0.3s;
+    }
+    .cookie-accept:hover { box-shadow: 0 4px 16px rgba(201,169,110,0.3); }
+    .cookie-decline {
+      padding: 10px 24px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      border-radius: 4px;
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .cookie-decline:hover { border-color: var(--text-dim); color: var(--text); }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .cars-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 900px) {
+      nav { padding: 18px 24px; }
+      nav ul { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: block; }
+      .mobile-overlay { display: block; }
+
+      .page-hero { padding: 100px 24px 60px; }
+      .page-hero h1 { font-size: 2.4rem; }
+      .page-hero p { font-size: 1rem; }
+
+      .filter-bar { padding: 0 24px 40px; }
+      .filter-bar-inner {
+        flex-direction: column;
+        padding: 20px;
+      }
+      .filter-group { min-width: 100%; }
+
+      .section { padding: 0 24px 80px; }
+      .results-count { padding: 0 24px 30px; }
+
+      .cars-grid { grid-template-columns: 1fr; }
+
+      footer {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+        padding: 36px 24px;
+      }
+
+      .cookie-banner { flex-direction: column; padding: 20px 24px; text-align: center; }
+      .back-to-top { bottom: 20px; right: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PAGE LOADER -->
+  <div class="page-loader" id="pageLoader"></div>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <a href="index.html" class="logo">Auto<span>Prime</span></a>
+    <ul>
+      <li><a href="index.html#inventory">Inventory</a></li>
+      <li><a href="index.html#why-us">Why Us</a></li>
+      <li><a href="index.html#testimonials">Reviews</a></li>
+      <li><a href="index.html#contact" class="nav-cta">Contact Us</a></li>
+    </ul>
+    <div class="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </nav>
+
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <div class="mobile-menu">
+    <a href="index.html#inventory" onclick="toggleMenu()">Inventory</a>
+    <a href="index.html#why-us" onclick="toggleMenu()">Why Us</a>
+    <a href="index.html#testimonials" onclick="toggleMenu()">Reviews</a>
+    <a href="index.html#contact" onclick="toggleMenu()">Contact Us</a>
+  </div>
+
+  <!-- HERO BANNER -->
+  <section class="page-hero">
+    <div class="line-accent reveal"></div>
+    <div class="section-tag reveal reveal-delay-1">Full Inventory</div>
+    <h1 class="reveal reveal-delay-2">Our Full <span class="accent">Collection</span></h1>
+    <p class="reveal reveal-delay-3">Browse, filter, and find your perfect vehicle from our curated selection of certified pre-owned cars.</p>
+  </section>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar reveal">
+    <div class="filter-bar-inner">
+      <div class="filter-group">
+        <label>Search</label>
+        <input type="text" id="searchInput" placeholder="Search by name..." />
+      </div>
+      <div class="filter-group">
+        <label>Price Range</label>
+        <select id="priceFilter">
+          <option value="all">All Prices</option>
+          <option value="0-25000">Under $25K</option>
+          <option value="25000-35000">$25K - $35K</option>
+          <option value="35000-50000">$35K - $50K</option>
+          <option value="50000-999999">Over $50K</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Fuel Type</label>
+        <select id="fuelFilter">
+          <option value="all">All</option>
+          <option value="Petrol">Petrol</option>
+          <option value="Diesel">Diesel</option>
+          <option value="Hybrid">Hybrid</option>
+          <option value="Electric">Electric</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Sort By</label>
+        <select id="sortFilter">
+          <option value="price-asc">Price Low-High</option>
+          <option value="price-desc">Price High-Low</option>
+          <option value="newest">Newest</option>
+          <option value="mileage">Mileage</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULTS COUNT -->
+  <div class="results-count" id="resultsCount">
+    Showing <strong>6</strong> vehicles
+  </div>
+
+  <!-- CAR GRID -->
+  <div class="section">
+    <div class="cars-grid" id="carsGrid">
+
+      <a href="toyota-camry.html" class="car-card reveal"
+         data-name="Toyota Camry SE 2023"
+         data-price="28900"
+         data-fuel="Hybrid"
+         data-year="2023"
+         data-mileage="18500">
+        <div class="car-img">
+          <img src="images/toyota-camry.jpg" alt="Toyota Camry SE 2023" loading="lazy" />
+          <div class="fuel-badge">Hybrid</div>
+        </div>
+        <div class="car-info">
+          <h3>Toyota Camry SE 2023</h3>
+          <div class="car-meta">
+            <span>18,500 mi</span>
+            <span>Automatic</span>
+            <span>Hybrid</span>
+          </div>
+          <div class="car-price">$28,900 <span>/ Est. $420/mo</span></div>
+          <div class="car-btn">View Details</div>
+        </div>
+      </a>
+
+      <a href="bmw-3-series.html" class="car-card reveal reveal-delay-1"
+         data-name="BMW 3 Series 2022"
+         data-price="41500"
+         data-fuel="Petrol"
+         data-year="2022"
+         data-mileage="22000">
+        <div class="car-img">
+          <img src="images/bmw-3-series.jpg" alt="BMW 3 Series 2022" loading="lazy" />
+          <div class="fuel-badge">Petrol</div>
+        </div>
+        <div class="car-info">
+          <h3>BMW 3 Series 2022</h3>
+          <div class="car-meta">
+            <span>22,000 mi</span>
+            <span>Automatic</span>
+            <span>Petrol</span>
+          </div>
+          <div class="car-price">$41,500 <span>/ Est. $605/mo</span></div>
+          <div class="car-btn">View Details</div>
+        </div>
+      </a>
+
+      <a href="ford-explorer.html" class="car-card reveal reveal-delay-2"
+         data-name="Ford Explorer XLT 2024"
+         data-price="45200"
+         data-fuel="Petrol"
+         data-year="2024"
+         data-mileage="5200">
+        <div class="car-img">
+          <img src="images/ford-explorer.jpg" alt="Ford Explorer XLT 2024" loading="lazy" />
+          <div class="fuel-badge">Petrol</div>
+        </div>
+        <div class="car-info">
+          <h3>Ford Explorer XLT 2024</h3>
+          <div class="car-meta">
+            <span>5,200 mi</span>
+            <span>Automatic</span>
+            <span>Petrol</span>
+          </div>
+          <div class="car-price">$45,200 <span>/ Est. $660/mo</span></div>
+          <div class="car-btn">View Details</div>
+        </div>
+      </a>
+
+      <a href="tesla-model-3.html" class="car-card reveal reveal-delay-3"
+         data-name="Tesla Model 3 2023"
+         data-price="38700"
+         data-fuel="Electric"
+         data-year="2023"
+         data-mileage="11000">
+        <div class="car-img">
+          <img src="images/tesla-model-3.jpg" alt="Tesla Model 3 2023" loading="lazy" />
+          <div class="fuel-badge">Electric</div>
+        </div>
+        <div class="car-info">
+          <h3>Tesla Model 3 2023</h3>
+          <div class="car-meta">
+            <span>11,000 mi</span>
+            <span>Automatic</span>
+            <span>Electric</span>
+          </div>
+          <div class="car-price">$38,700 <span>/ Est. $565/mo</span></div>
+          <div class="car-btn">View Details</div>
+        </div>
+      </a>
+
+      <a href="honda-civic.html" class="car-card reveal reveal-delay-4"
+         data-name="Honda Civic Sport 2021"
+         data-price="22400"
+         data-fuel="Petrol"
+         data-year="2021"
+         data-mileage="34800">
+        <div class="car-img">
+          <img src="images/honda-civic.jpg" alt="Honda Civic Sport 2021" loading="lazy" />
+          <div class="fuel-badge">Petrol</div>
+        </div>
+        <div class="car-info">
+          <h3>Honda Civic Sport 2021</h3>
+          <div class="car-meta">
+            <span>34,800 mi</span>
+            <span>Manual</span>
+            <span>Petrol</span>
+          </div>
+          <div class="car-price">$22,400 <span>/ Est. $325/mo</span></div>
+          <div class="car-btn">View Details</div>
+        </div>
+      </a>
+
+      <a href="ram-1500.html" class="car-card reveal reveal-delay-5"
+         data-name="RAM 1500 Big Horn 2023"
+         data-price="52000"
+         data-fuel="Diesel"
+         data-year="2023"
+         data-mileage="9100">
+        <div class="car-img">
+          <img src="images/ram-1500.jpg" alt="RAM 1500 Big Horn 2023" loading="lazy" />
+          <div class="fuel-badge">Diesel</div>
+        </div>
+        <div class="car-info">
+          <h3>RAM 1500 Big Horn 2023</h3>
+          <div class="car-meta">
+            <span>9,100 mi</span>
+            <span>Automatic</span>
+            <span>Diesel</span>
+          </div>
+          <div class="car-price">$52,000 <span>/ Est. $760/mo</span></div>
+          <div class="car-btn">View Details</div>
+        </div>
+      </a>
+
+      <!-- NO RESULTS MESSAGE -->
+      <div class="no-results" id="noResults">
+        <h3>No vehicles found</h3>
+        <p>Try adjusting your filters or search terms.</p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="index.html" class="logo">Auto<span>Prime</span></a>
+    <p>123 Main Street, Auto City, CA 90001 &nbsp;&bull;&nbsp; <a href="tel:+15550001234">(555) 000-1234</a></p>
+    <p>&copy; 2026 AutoPrime. All rights reserved.</p>
+  </footer>
+
+  <!-- BACK TO TOP -->
+  <a href="#" class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">&#8593;</a>
+
+  <!-- COOKIE BANNER -->
+  <div class="cookie-banner" id="cookieBanner">
+    <p>We use cookies to enhance your browsing experience and analyze site traffic. By continuing, you agree to our <a href="#">Privacy Policy</a>.</p>
+    <div class="cookie-buttons">
+      <button class="cookie-accept" onclick="document.getElementById('cookieBanner').classList.remove('visible')">Accept All</button>
+      <button class="cookie-decline" onclick="document.getElementById('cookieBanner').classList.remove('visible')">Decline</button>
+    </div>
+  </div>
+
+  <script>
+    // PAGE LOADER
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.getElementById('pageLoader').classList.add('hidden');
+      }, 600);
+      setTimeout(() => {
+        document.getElementById('cookieBanner').classList.add('visible');
+      }, 2000);
+    });
+
+    // SCROLL REVEAL
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // MOBILE MENU
+    function toggleMenu() {
+      document.querySelector('.hamburger').classList.toggle('active');
+      document.querySelector('.mobile-menu').classList.toggle('active');
+      document.getElementById('mobileOverlay').classList.toggle('active');
+      document.body.style.overflow = document.querySelector('.mobile-menu').classList.contains('active') ? 'hidden' : '';
+    }
+    document.getElementById('mobileOverlay').addEventListener('click', function() {
+      if (this.classList.contains('active')) toggleMenu();
+    });
+
+    // NAV + BACK TO TOP ON SCROLL
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('nav');
+      nav.style.background = window.scrollY > 50 ? 'rgba(10,10,10,0.95)' : 'rgba(10,10,10,0.85)';
+      if (window.scrollY > 400) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+
+    // FILTER & SEARCH FUNCTIONALITY
+    const searchInput = document.getElementById('searchInput');
+    const priceFilter = document.getElementById('priceFilter');
+    const fuelFilter = document.getElementById('fuelFilter');
+    const sortFilter = document.getElementById('sortFilter');
+    const carsGrid = document.getElementById('carsGrid');
+    const resultsCount = document.getElementById('resultsCount');
+    const noResults = document.getElementById('noResults');
+
+    function getCards() {
+      return Array.from(carsGrid.querySelectorAll('.car-card'));
+    }
+
+    function filterAndSort() {
+      const cards = getCards();
+      const query = searchInput.value.toLowerCase().trim();
+      const priceRange = priceFilter.value;
+      const fuelType = fuelFilter.value;
+      const sortBy = sortFilter.value;
+
+      let visibleCount = 0;
+
+      // Filter
+      cards.forEach(card => {
+        const name = card.dataset.name.toLowerCase();
+        const price = parseInt(card.dataset.price);
+        const fuel = card.dataset.fuel;
+
+        let show = true;
+
+        // Search filter
+        if (query && !name.includes(query)) {
+          show = false;
+        }
+
+        // Price filter
+        if (priceRange !== 'all') {
+          const [min, max] = priceRange.split('-').map(Number);
+          if (price < min || price > max) {
+            show = false;
+          }
+        }
+
+        // Fuel filter
+        if (fuelType !== 'all' && fuel !== fuelType) {
+          show = false;
+        }
+
+        if (show) {
+          card.classList.remove('hidden');
+          visibleCount++;
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      // Sort visible cards
+      const visibleCards = cards.filter(c => !c.classList.contains('hidden'));
+
+      visibleCards.sort((a, b) => {
+        switch (sortBy) {
+          case 'price-asc':
+            return parseInt(a.dataset.price) - parseInt(b.dataset.price);
+          case 'price-desc':
+            return parseInt(b.dataset.price) - parseInt(a.dataset.price);
+          case 'newest':
+            return parseInt(b.dataset.year) - parseInt(a.dataset.year) ||
+                   parseInt(a.dataset.mileage) - parseInt(b.dataset.mileage);
+          case 'mileage':
+            return parseInt(a.dataset.mileage) - parseInt(b.dataset.mileage);
+          default:
+            return 0;
+        }
+      });
+
+      // Re-append in sorted order (hidden cards go to end)
+      const hiddenCards = cards.filter(c => c.classList.contains('hidden'));
+      visibleCards.forEach(card => carsGrid.appendChild(card));
+      hiddenCards.forEach(card => carsGrid.appendChild(card));
+      carsGrid.appendChild(noResults);
+
+      // Update count
+      resultsCount.innerHTML = 'Showing <strong>' + visibleCount + '</strong> vehicle' + (visibleCount !== 1 ? 's' : '');
+
+      // No results message
+      if (visibleCount === 0) {
+        noResults.classList.add('visible');
+      } else {
+        noResults.classList.remove('visible');
+      }
+    }
+
+    searchInput.addEventListener('input', filterAndSort);
+    priceFilter.addEventListener('change', filterAndSort);
+    fuelFilter.addEventListener('change', filterAndSort);
+    sortFilter.addEventListener('change', filterAndSort);
+
+    // Run initial sort
+    filterAndSort();
+  </script>
+
+</body>
+</html>

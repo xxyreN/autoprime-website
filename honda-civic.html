@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2021 Honda Civic Sport — AutoPrime</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #111111;
+      --bg-elevated: #161616;
+      --gold: #c9a96e;
+      --gold-light: #e2c992;
+      --gold-dark: #a8883d;
+      --text: #f0ece2;
+      --text-dim: #8a8475;
+      --text-muted: #5a5549;
+      --border: rgba(201,169,110,0.12);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); }
+    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+
+    /* Nav — Glassmorphism */
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 60px;
+      background: rgba(10,10,10,0.7);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 1000;
+    }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 800; color: var(--gold); letter-spacing: -1px; text-decoration: none; }
+    .logo span { color: var(--text); }
+    .nav-links { list-style: none; display: flex; gap: 32px; align-items: center; }
+    .nav-links a { text-decoration: none; color: var(--text-dim); font-weight: 500; font-size: 0.95rem; transition: color 0.3s; }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta { background: var(--gold); color: var(--bg) !important; padding: 10px 22px; border-radius: 6px; font-weight: 700 !important; transition: background 0.3s !important; }
+    .nav-cta:hover { background: var(--gold-light) !important; }
+
+    /* Hamburger */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; z-index: 1001; }
+    .hamburger span { display: block; width: 26px; height: 2px; background: var(--gold); border-radius: 2px; transition: all 0.3s; }
+    .hamburger.active span:nth-child(1) { transform: rotate(45deg) translate(5px, 5px); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: rotate(-45deg) translate(5px, -5px); }
+
+    /* Back bar */
+    .back-bar {
+      padding: 14px 60px; background: var(--bg-card);
+      border-bottom: 1px solid var(--border); font-size: 0.9rem;
+    }
+    .back-bar a { color: var(--gold); text-decoration: none; font-weight: 600; transition: color 0.3s; }
+    .back-bar a:hover { color: var(--gold-light); text-decoration: underline; }
+
+    /* Car detail grid */
+    .car-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 520px; }
+    .car-gallery { overflow: hidden; background: var(--bg-card); position: relative; cursor: zoom-in; }
+    .car-gallery img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .car-gallery:hover img { transform: scale(1.08); }
+    .car-summary {
+      padding: 50px; display: flex; flex-direction: column; justify-content: center;
+      background: var(--bg-elevated);
+    }
+    .badge {
+      display: inline-block; background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: var(--bg); font-size: 0.75rem; font-weight: 700; padding: 5px 14px;
+      border-radius: 20px; margin-bottom: 16px; text-transform: uppercase; letter-spacing: 0.8px;
+      width: fit-content;
+    }
+    .car-summary h1 { font-size: 2.4rem; font-weight: 900; line-height: 1.15; margin-bottom: 14px; color: var(--text); }
+    .meta-row { display: flex; gap: 22px; flex-wrap: wrap; margin-bottom: 28px; }
+    .meta-item { display: flex; align-items: center; gap: 6px; color: var(--text-dim); font-size: 0.9rem; }
+    .meta-item strong { color: var(--text); }
+    .price-display { font-family: 'Playfair Display', serif; font-size: 2.8rem; font-weight: 900; color: var(--gold); line-height: 1; }
+    .price-sub { color: var(--text-muted); font-size: 0.9rem; margin-top: 6px; margin-bottom: 32px; }
+    .cta-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: var(--bg); padding: 14px 28px; border-radius: 8px; text-decoration: none;
+      font-weight: 700; font-size: 0.95rem; transition: all 0.3s; border: none; cursor: pointer;
+    }
+    .btn-primary:hover { background: linear-gradient(135deg, var(--gold), var(--gold-light)); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,169,110,0.25); }
+    .btn-outline {
+      border: 2px solid var(--gold); color: var(--gold); padding: 14px 28px; border-radius: 8px;
+      text-decoration: none; font-weight: 700; font-size: 0.95rem; transition: all 0.3s; background: transparent;
+    }
+    .btn-outline:hover { background: var(--gold); color: var(--bg); }
+
+    /* Specs */
+    .specs-section { padding: 70px 60px; background: var(--bg-card); }
+    .specs-section h2 { font-size: 1.7rem; font-weight: 800; margin-bottom: 32px; color: var(--text); }
+    .specs-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); }
+    .spec-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border); transition: background 0.2s; }
+    .spec-item:hover { background: rgba(201,169,110,0.03); }
+    .spec-label { font-size: 0.78rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+    .spec-value { font-size: 0.95rem; font-weight: 600; color: var(--text); text-align: right; }
+
+    /* Payment */
+    .payment-section { padding: 70px 60px; background: var(--bg); }
+    .payment-section h2 { font-size: 1.7rem; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+    .payment-section > p { color: var(--text-dim); margin-bottom: 36px; font-size: 0.95rem; }
+    .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .pay-card {
+      border: 1px solid var(--border); border-radius: 14px; padding: 38px;
+      background: var(--bg-card); transition: all 0.3s;
+    }
+    .pay-card:hover { border-color: var(--gold); box-shadow: 0 8px 32px rgba(201,169,110,0.06); }
+    .pay-card.featured { border-color: var(--gold); background: linear-gradient(145deg, var(--bg-card), rgba(201,169,110,0.04)); }
+    .pay-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 8px; color: var(--text); }
+    .pay-card .pay-desc { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 26px; line-height: 1.7; }
+    .pay-total { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; color: var(--gold); margin-bottom: 6px; }
+    .pay-note { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 26px; }
+    .calc-row { display: flex; flex-direction: column; gap: 14px; margin-bottom: 26px; }
+    .calc-field label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-dim); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .calc-field input, .calc-field select {
+      width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 8px;
+      font-size: 0.95rem; font-family: 'Inter', sans-serif; outline: none; transition: all 0.3s;
+      background: var(--bg); color: var(--text);
+    }
+    .calc-field select option { background: var(--bg-card); color: var(--text); }
+    .calc-field input:focus, .calc-field select:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,169,110,0.1); }
+    .monthly-result {
+      background: linear-gradient(135deg, var(--bg-elevated), rgba(201,169,110,0.05));
+      border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px;
+      text-align: center; margin-bottom: 22px;
+    }
+    .monthly-result .mo-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .monthly-result .mo-amount { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 900; color: var(--gold); }
+    .btn-full {
+      display: block; text-align: center; padding: 14px;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: var(--bg); border-radius: 8px; text-decoration: none; font-weight: 700;
+      font-size: 1rem; transition: all 0.3s; cursor: pointer; border: none;
+      width: 100%; font-family: 'Inter', sans-serif;
+    }
+    .btn-full:hover { background: linear-gradient(135deg, var(--gold), var(--gold-light)); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(201,169,110,0.25); }
+    .btn-full-dark { background: var(--bg-elevated); color: var(--text); border: 1px solid var(--border); }
+    .btn-full-dark:hover { background: var(--bg); border-color: var(--gold); color: var(--gold); transform: translateY(-1px); box-shadow: none; }
+
+    /* Customizer */
+    .customizer-section {
+      padding: 70px 60px;
+      background: var(--bg);
+    }
+    .customizer-section h2 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      margin-bottom: 32px;
+      color: var(--text);
+    }
+    .customizer-layout {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+    .customizer-preview {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+    .customizer-preview img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: filter 0.5s ease;
+    }
+    .customizer-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .control-group {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .control-group label,
+    .control-group > span {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+    .color-swatches {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .color-swatch {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 3px solid transparent;
+      cursor: pointer;
+      transition: border-color 0.3s, transform 0.2s;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.15);
+    }
+    .color-swatch:hover { transform: scale(1.15); }
+    .color-swatch.active { border-color: var(--gold); transform: scale(1.15); }
+    .color-swatch[data-color="silver"] { background: #828287; }
+    .color-swatch[data-color="black"]  { background: #111; }
+
+    /* Toggle switch */
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .toggle-row span {
+      margin-bottom: 0 !important;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      cursor: pointer;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--text-dim);
+      transition: transform 0.3s, background 0.3s;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background: var(--gold-dark);
+      border-color: var(--gold);
+    }
+    .toggle-switch input:checked + .toggle-slider::before {
+      transform: translateX(22px);
+      background: var(--text);
+    }
+
+    /* Stripe buttons */
+    .stripe-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .stripe-btn {
+      padding: 8px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-elevated);
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      font-weight: 600;
+      font-family: var(--font-body, 'Inter', sans-serif);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .stripe-btn:hover { border-color: var(--gold); color: var(--text); }
+    .stripe-btn.active {
+      border-color: var(--gold);
+      background: rgba(201,169,110,0.1);
+      color: var(--gold);
+    }
+
+    /* Text input */
+    .customizer-text-input {
+      width: 100%;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: var(--font-body, 'Inter', sans-serif);
+      outline: none;
+      transition: all 0.3s;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .customizer-text-input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.1);
+    }
+
+    /* Reset button */
+    .customizer-reset {
+      padding: 12px 24px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg-elevated);
+      color: var(--text-dim);
+      font-size: 0.9rem;
+      font-weight: 600;
+      font-family: var(--font-body, 'Inter', sans-serif);
+      cursor: pointer;
+      transition: all 0.3s;
+      width: 100%;
+    }
+    .customizer-reset:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(201,169,110,0.05);
+    }
+
+    @media (max-width: 900px) {
+      .customizer-section { padding: 44px 24px; }
+      .customizer-layout { grid-template-columns: 1fr; }
+    }
+
+    /* Footer */
+    footer {
+      background: var(--bg-card); color: var(--text-dim); padding: 40px 60px;
+      display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--border);
+    }
+    .f-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 800; color: var(--gold); letter-spacing: -1px; }
+    footer p { font-size: 0.9rem; }
+    footer a { color: var(--text-dim); text-decoration: none; transition: color 0.3s; }
+    footer a:hover { color: var(--gold); }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Mobile nav overlay */
+    .mobile-overlay {
+      position: fixed; inset: 0; background: rgba(10,10,10,0.95);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      z-index: 999; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 32px;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      transition: opacity 0.3s, visibility 0.3s;
+    }
+    .mobile-overlay.active { opacity: 1; visibility: visible; pointer-events: all; }
+    .mobile-overlay a {
+      text-decoration: none; color: var(--text); font-size: 1.4rem; font-weight: 600;
+      font-family: 'Playfair Display', serif; transition: color 0.3s;
+    }
+    .mobile-overlay a:hover { color: var(--gold); }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .back-bar { padding: 12px 24px; }
+      .car-detail { grid-template-columns: 1fr; }
+      .car-gallery { height: 280px; }
+      .car-summary { padding: 32px 24px; }
+      .car-summary h1 { font-size: 1.8rem; }
+      .price-display { font-size: 2.2rem; }
+      .specs-section { padding: 44px 24px; }
+      .specs-grid { grid-template-columns: 1fr; }
+      .payment-section { padding: 44px 24px; }
+      .payment-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 30px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <a href="index.html#inventory" class="logo">Auto<span>Prime</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#inventory">Inventory</a></li>
+      <li><a href="index.html#why-us">Why Us</a></li>
+      <li><a href="index.html#testimonials">Reviews</a></li>
+      <li><a href="index.html#contact" class="nav-cta">Contact Us</a></li>
+    </ul>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile overlay -->
+  <div class="mobile-overlay" id="mobileMenu">
+    <a href="index.html#inventory" onclick="toggleMenu()">Inventory</a>
+    <a href="index.html#why-us" onclick="toggleMenu()">Why Us</a>
+    <a href="index.html#testimonials" onclick="toggleMenu()">Reviews</a>
+    <a href="index.html#contact" onclick="toggleMenu()">Contact Us</a>
+  </div>
+
+  <!-- Back bar -->
+  <div class="back-bar"><a href="index.html#inventory">&larr; Back to Inventory</a></div>
+
+  <!-- Car Detail -->
+  <div class="car-detail">
+    <div class="car-gallery">
+      <img src="images/honda-civic.jpg" alt="2021 Honda Civic Sport">
+    </div>
+    <div class="car-summary">
+      <span class="badge">&#9981; Petrol &middot; Certified</span>
+      <h1>2021 Honda Civic Sport</h1>
+      <div class="meta-row">
+        <div class="meta-item">&#128205; <strong>34,800</strong> miles</div>
+        <div class="meta-item">&#9881; <strong>Manual</strong></div>
+        <div class="meta-item">&#127912; <strong>Sonic Gray Pearl</strong></div>
+      </div>
+      <div class="price-display" id="heroPrice">$22,400</div>
+      <div class="price-sub" id="heroFinance">or finance from $309/mo &middot; 12-month warranty included</div>
+      <div class="cta-buttons">
+        <a href="index.html#contact" class="btn-primary">Book a Test Drive</a>
+        <a href="index.html#contact" class="btn-outline">Contact Us</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Specs -->
+  <section class="specs-section reveal">
+    <h2>Vehicle Specifications</h2>
+    <div class="specs-grid">
+      <div class="spec-item"><div class="spec-label">Year</div><div class="spec-value">2021</div></div>
+      <div class="spec-item"><div class="spec-label">Make</div><div class="spec-value">Honda</div></div>
+      <div class="spec-item"><div class="spec-label">Model</div><div class="spec-value">Civic Sport</div></div>
+      <div class="spec-item"><div class="spec-label">Mileage</div><div class="spec-value">34,800 mi</div></div>
+      <div class="spec-item"><div class="spec-label">Engine</div><div class="spec-value">1.5L VTEC Turbo I4</div></div>
+      <div class="spec-item"><div class="spec-label">Transmission</div><div class="spec-value">6-Speed Manual</div></div>
+      <div class="spec-item"><div class="spec-label">Fuel Type</div><div class="spec-value">Petrol</div></div>
+      <div class="spec-item"><div class="spec-label">Fuel Economy</div><div class="spec-value">31 city / 40 hwy</div></div>
+      <div class="spec-item"><div class="spec-label">Drive</div><div class="spec-value">Front-Wheel Drive</div></div>
+      <div class="spec-item"><div class="spec-label">Exterior Color</div><div class="spec-value">Sonic Gray Pearl</div></div>
+      <div class="spec-item"><div class="spec-label">Horsepower</div><div class="spec-value">158 hp</div></div>
+      <div class="spec-item"><div class="spec-label">VIN</div><div class="spec-value">2HGFC2F83MH123456</div></div>
+    </div>
+  </section>
+
+  <!-- Customizer -->
+  <section class="customizer-section reveal">
+    <h2>Customize Your Vehicle</h2>
+    <div class="customizer-layout">
+      <div class="customizer-preview">
+        <img id="customizerImg" src="images/honda-civic.jpg" alt="Customize 2021 Honda Civic Sport" style="transition: opacity 0.4s ease;">
+      </div>
+      <div class="customizer-controls">
+        <div class="control-group">
+          <span>Exterior Color</span>
+          <div id="activeColorName" style="font-size:0.8rem; color:var(--gold); margin-bottom:12px; font-weight:500;">Original (Silver)</div>
+          <div class="color-swatches">
+            <div class="color-swatch active" data-color="silver" title="Original (Silver)" onclick="setColor(this, 'original')"></div>
+            <div class="color-swatch" data-color="black" title="Midnight Black" onclick="setColor(this, 'black')"></div>
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="toggle-row">
+            <span>Rear Spoiler</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="spoilerToggle" onchange="toggleSpoiler()">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+        <div class="control-group">
+          <span>Racing Stripes</span>
+          <div class="stripe-options">
+            <button class="stripe-btn active" onclick="setStripe('none', this)">None</button>
+            <button class="stripe-btn" onclick="setStripe('racing', this)">Racing</button>
+            <button class="stripe-btn" onclick="setStripe('side', this)">Side</button>
+            <button class="stripe-btn" onclick="setStripe('hood', this)">Hood</button>
+          </div>
+        </div>
+        <div class="control-group">
+          <label for="customText">Custom Text</label>
+          <input type="text" id="customText" class="customizer-text-input" placeholder="Your text here..." maxlength="20" oninput="updateText()">
+        </div>
+        <button class="customizer-reset" onclick="resetCustomizer()">Reset All Customizations</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Payment -->
+  <section class="payment-section reveal">
+    <h2>Choose Your Payment Option</h2>
+    <p>Pick the plan that works best for you. Both options include a 12-month warranty.</p>
+    <div class="payment-grid">
+
+      <div class="pay-card">
+        <h3>&#128181; Pay in Full</h3>
+        <p class="pay-desc">One-time payment, no interest, no monthly obligations. Drive it home today.</p>
+        <div class="pay-total">$22,400</div>
+        <div class="pay-note">All taxes &amp; fees included at signing</div>
+        <a href="index.html#contact" class="btn-full btn-full-dark">Buy Now &mdash; Full Payment</a>
+      </div>
+
+      <div class="pay-card featured">
+        <h3>&#128197; Finance It</h3>
+        <p class="pay-desc">Adjust the down payment and loan term to find your ideal monthly payment.</p>
+        <div class="calc-row">
+          <div class="calc-field">
+            <label>Down Payment ($)</label>
+            <input type="number" id="hc-down" value="2000" min="0" max="22400" oninput="calcCivic()">
+          </div>
+          <div class="calc-field">
+            <label>Loan Term</label>
+            <select id="hc-term" onchange="calcCivic()">
+              <option value="24">24 months</option>
+              <option value="36">36 months</option>
+              <option value="48">48 months</option>
+              <option value="60" selected>60 months</option>
+              <option value="72">72 months</option>
+            </select>
+          </div>
+          <div class="calc-field">
+            <label>APR (%)</label>
+            <input type="number" id="hc-apr" value="5.9" step="0.1" min="0" oninput="calcCivic()">
+          </div>
+        </div>
+        <div class="monthly-result">
+          <div class="mo-label">Estimated Monthly Payment</div>
+          <div class="mo-amount" id="hc-result">$389/mo</div>
+        </div>
+        <a href="index.html#contact" class="btn-full">Apply for Financing</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="f-logo">Auto<span style="color:var(--text-dim)">Prime</span></div>
+    <p>123 Main Street, Auto City, CA 90001 &nbsp;|&nbsp; <a href="tel:+15550001234">(555) 000-1234</a></p>
+    <p>&copy; 2026 AutoPrime. All rights reserved.</p>
+  </footer>
+
+  <script>
+    /* Finance calculator */
+    function calcCivic() {
+      const price = 22400;
+      const down = parseFloat(document.getElementById('hc-down').value) || 0;
+      const term = parseInt(document.getElementById('hc-term').value);
+      const apr = parseFloat(document.getElementById('hc-apr').value) / 100 / 12;
+      const principal = Math.max(0, price - down);
+      let monthly;
+      if (apr === 0) { monthly = principal / term; }
+      else { monthly = principal * apr * Math.pow(1 + apr, term) / (Math.pow(1 + apr, term) - 1); }
+      document.getElementById('hc-result').textContent = '$' + Math.round(monthly).toLocaleString() + '/mo';
+    }
+    calcCivic();
+
+    /* Mobile hamburger menu */
+    function toggleMenu() {
+      document.querySelector('.hamburger').classList.toggle('active');
+      document.getElementById('mobileMenu').classList.toggle('active');
+      document.body.style.overflow = document.getElementById('mobileMenu').classList.contains('active') ? 'hidden' : '';
+    }
+
+    /* Scroll reveal with Intersection Observer */
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    /* Vehicle Customizer */
+    const colorImages = { original: 'images/honda-civic.jpg', black: 'images/black-honda-civic.jpg' };
+    const colorLabels = { original: 'Original (Silver)', black: 'Midnight Black' };
+    const activeColorName = document.getElementById('activeColorName');
+    const previewImg = document.getElementById('customizerImg');
+    function setColor(swatch, color) {
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+      swatch.classList.add('active');
+      previewImg.style.opacity = '0';
+      const tmp = new Image();
+      tmp.onload = function() { previewImg.src = colorImages[color]; previewImg.style.opacity = '1'; };
+      tmp.src = colorImages[color];
+      if (activeColorName) activeColorName.textContent = colorLabels[color];
+      var hp = document.getElementById('heroPrice');
+      var hf = document.getElementById('heroFinance');
+      if (color === 'black') {
+        hp.innerHTML = '$22,450 <span style="font-size:0.7em;color:var(--text-muted);font-weight:400">(+$50 Black Edition)</span>';
+        hf.innerHTML = 'or finance from $310/mo &middot; 12-month warranty included';
+      } else {
+        hp.textContent = '$22,400';
+        hf.innerHTML = 'or finance from $309/mo &middot; 12-month warranty included';
+      }
+    }
+
+    function toggleSpoiler() {
+      // simplified — no overlay
+    }
+
+    function setStripe(type, el) {
+      document.querySelectorAll('.stripe-btn').forEach(b => b.classList.remove('active'));
+      if (el) el.classList.add('active');
+    }
+
+    function updateText() {
+      // simplified — no overlay
+    }
+
+    function resetCustomizer() {
+      setColor(document.querySelector('.color-swatch[data-color="silver"]'), 'original');
+      document.getElementById('spoilerToggle').checked = false;
+      setStripe('none', document.querySelector('.stripe-btn'));
+      document.getElementById('customText').value = '';
+    }
+  </script>
+</body>
+</html>

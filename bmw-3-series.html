@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2022 BMW 3 Series | AutoPrime</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0a0a0a;
+            --bg-card: #111111;
+            --bg-elevated: #161616;
+            --gold: #c9a96e;
+            --gold-light: #e2c992;
+            --gold-dark: #a8883d;
+            --text: #f0ece2;
+            --text-dim: #8a8475;
+            --text-muted: #5a5549;
+            --border: rgba(201,169,110,0.12);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Scroll Reveal */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ===================== NAV ===================== */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(10,10,10,0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: 0.5px;
+        }
+
+        .logo span {
+            color: var(--gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            transition: color 0.3s;
+            letter-spacing: 0.3px;
+        }
+
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 4px;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 24px;
+            height: 2px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: transform 0.3s, opacity 0.3s;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        /* Mobile Menu */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 280px;
+            height: 100vh;
+            background: var(--bg-card);
+            border-left: 1px solid var(--border);
+            z-index: 999;
+            transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 100px 32px 40px;
+        }
+
+        .mobile-menu.open {
+            right: 0;
+        }
+
+        .mobile-menu a {
+            display: block;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            transition: color 0.3s, padding-left 0.3s;
+        }
+
+        .mobile-menu a:hover {
+            color: var(--gold);
+            padding-left: 8px;
+        }
+
+        .mobile-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+
+        .mobile-overlay.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: all;
+        }
+
+        /* ===================== BACK BAR ===================== */
+        .back-bar {
+            margin-top: 72px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-card);
+        }
+
+        .back-bar a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-dim);
+            transition: color 0.3s;
+        }
+
+        .back-bar a:hover {
+            color: var(--gold);
+        }
+
+        .back-bar svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ===================== DETAIL HERO ===================== */
+        .detail-section {
+            padding: 60px 0 80px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+
+        /* Image */
+        .detail-image-wrap {
+            border-radius: 16px;
+            overflow: hidden;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            position: relative;
+        }
+
+        .detail-image-wrap img {
+            width: 100%;
+            height: 420px;
+            object-fit: cover;
+            transition: transform 0.6s cubic-bezier(0.25, 0, 0.25, 1);
+        }
+
+        .detail-image-wrap:hover img {
+            transform: scale(1.08);
+        }
+
+        /* Summary */
+        .car-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        .car-badge .dot {
+            width: 4px;
+            height: 4px;
+            border-radius: 50%;
+            background: var(--gold-dark);
+        }
+
+        .detail-title {
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+
+        .detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        .meta-item svg {
+            width: 18px;
+            height: 18px;
+            color: var(--gold);
+        }
+
+        .detail-price {
+            margin-bottom: 12px;
+        }
+
+        .detail-price .price-amount {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .detail-price .price-finance {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-top: 4px;
+        }
+
+        .detail-ctas {
+            display: flex;
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #0a0a0a;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(201,169,110,0.3);
+        }
+
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 32px;
+            background: transparent;
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1px solid var(--gold);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-outline:hover {
+            background: rgba(201,169,110,0.08);
+            transform: translateY(-2px);
+        }
+
+        /* ===================== SPECS ===================== */
+        .specs-section {
+            padding: 80px 60px;
+            background: var(--bg-elevated);
+        }
+
+        .section-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            color: var(--text);
+            margin-bottom: 48px;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: 1px solid var(--border);
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 24px;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s;
+        }
+
+        .spec-item:hover {
+            background: rgba(201,169,110,0.03);
+        }
+
+        .spec-label {
+            font-size: 0.78rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .spec-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text);
+            text-align: right;
+        }
+
+        /* ===================== PAYMENT ===================== */
+        .payment-section {
+            padding: 80px 0;
+        }
+
+        .payment-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .payment-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px;
+        }
+
+        .payment-card h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .payment-card .subtitle {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            margin-bottom: 32px;
+        }
+
+        .pay-full-price {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--gold);
+            margin-bottom: 8px;
+        }
+
+        .pay-full-note {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        .calc-group {
+            margin-bottom: 20px;
+        }
+
+        .calc-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-dim);
+            margin-bottom: 8px;
+        }
+
+        .calc-group input,
+        .calc-group select {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .calc-group input:focus,
+        .calc-group select:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(201,169,110,0.15);
+        }
+
+        .calc-group select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%238a8475' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+
+        .calc-result {
+            margin-top: 28px;
+            padding: 24px;
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .calc-result .result-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .calc-result .result-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .calc-result .result-note {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ── Customizer Section ── */
+        .customizer-section { padding: 80px 60px; background: var(--bg-elevated); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+        .customizer-section .section-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); margin-bottom: 10px; }
+        .customizer-section .section-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+        .customizer-section .section-subtitle { color: var(--text-dim); font-size: 0.92rem; margin-bottom: 48px; line-height: 1.6; }
+        .customizer-layout { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: start; }
+        .customizer-preview { position: relative; border-radius: 12px; overflow: hidden; background: #0d0d0d; border: 1px solid var(--border); aspect-ratio: 16/10; }
+        .customizer-preview img { width: 100%; height: 100%; object-fit: cover; display: block; transition: filter 0.5s ease; }
+        .preview-color-overlay { position: absolute; inset: 0; pointer-events: none; transition: background 0.5s ease, opacity 0.5s ease; mix-blend-mode: multiply; opacity: 0; }
+        .preview-color-overlay.active { opacity: 1; }
+        .preview-stripe-overlay { position: absolute; inset: 0; pointer-events: none; transition: opacity 0.4s ease; opacity: 0; }
+        .preview-stripe-overlay.active { opacity: 1; }
+        .stripe-racing { background: repeating-linear-gradient(90deg, transparent 0%, transparent 42%, rgba(255,255,255,0.12) 42%, rgba(255,255,255,0.12) 44%, transparent 44%, transparent 56%, rgba(255,255,255,0.12) 56%, rgba(255,255,255,0.12) 58%, transparent 58%, transparent 100%); }
+        .stripe-side { background: linear-gradient(180deg, transparent 0%, transparent 55%, rgba(201,169,110,0.2) 55%, rgba(201,169,110,0.2) 60%, transparent 60%, transparent 100%); }
+        .stripe-hood { background: linear-gradient(180deg, transparent 0%, transparent 15%, rgba(255,255,255,0.08) 15%, rgba(255,255,255,0.08) 45%, transparent 45%, transparent 100%); }
+        .preview-spoiler-overlay { position: absolute; bottom: 28%; right: 5%; width: 120px; pointer-events: none; opacity: 0; transition: opacity 0.4s ease, transform 0.4s ease; transform: translateY(8px); }
+        .preview-spoiler-overlay.active { opacity: 1; transform: translateY(0); }
+        .preview-text-overlay { position: absolute; bottom: 35%; left: 50%; transform: translateX(-50%); pointer-events: none; font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; color: rgba(255,255,255,0.85); text-shadow: 0 2px 8px rgba(0,0,0,0.7), 0 0 20px rgba(0,0,0,0.5); white-space: nowrap; letter-spacing: 2px; text-transform: uppercase; opacity: 0; transition: opacity 0.4s ease; }
+        .preview-text-overlay.active { opacity: 1; }
+        .preview-badge { position: absolute; top: 16px; left: 16px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 8px 16px; border-radius: 4px; border: 1px solid rgba(201,169,110,0.2); font-size: 0.7rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); }
+        .customizer-controls { display: flex; flex-direction: column; gap: 28px; }
+        .control-group { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 24px; transition: border-color 0.3s; }
+        .control-group:hover { border-color: rgba(201,169,110,0.2); }
+        .control-group-title { font-family: var(--font-display); font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .control-group-title svg { width: 16px; height: 16px; color: var(--gold); }
+        .color-swatches { display: flex; gap: 10px; flex-wrap: wrap; }
+        .color-swatch { width: 36px; height: 36px; border-radius: 50%; cursor: pointer; border: 2px solid transparent; transition: all 0.2s; position: relative; }
+        .color-swatch:hover { transform: scale(1.12); }
+        .color-swatch.active { border-color: var(--gold); box-shadow: 0 0 12px rgba(201,169,110,0.3); }
+        .color-swatch.active::after { content: ''; position: absolute; inset: -5px; border-radius: 50%; border: 1px solid var(--gold); }
+        .swatch-white { background: #f0f0f0; } .swatch-black { background: #1a1a1a; border-color: rgba(255,255,255,0.15); } .swatch-black.active { border-color: var(--gold); }
+        .swatch-red { background: #8b1a1a; } .swatch-blue { background: #1a3a6b; } .swatch-silver { background: #8a8a8a; } .swatch-green { background: #1a4a2a; } .swatch-gold { background: #8a6d2a; }
+        .color-swatch-label { font-size: 0.72rem; color: var(--text-muted); text-align: center; margin-top: 4px; }
+        .swatch-item { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; }
+        .toggle-label { font-size: 0.88rem; color: var(--text-dim); }
+        .toggle-switch { width: 48px; height: 26px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 13px; cursor: pointer; position: relative; transition: all 0.3s; }
+        .toggle-switch::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--text-muted); transition: all 0.3s; }
+        .toggle-switch.active { background: var(--gold-dark); border-color: var(--gold); }
+        .toggle-switch.active::after { left: 25px; background: var(--gold-light); }
+        .custom-text-input { width: 100%; padding: 12px 16px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--font-body); font-size: 0.9rem; outline: none; transition: border-color 0.3s, box-shadow 0.3s; }
+        .custom-text-input::placeholder { color: var(--text-muted); }
+        .custom-text-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(201,169,110,0.1); }
+        .text-hint { font-size: 0.72rem; color: var(--text-muted); margin-top: 8px; }
+        .stripe-options { display: flex; gap: 8px; flex-wrap: wrap; }
+        .stripe-btn { padding: 8px 16px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 6px; color: var(--text-dim); font-family: var(--font-body); font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
+        .stripe-btn:hover { border-color: rgba(201,169,110,0.3); color: var(--text); }
+        .stripe-btn.active { background: var(--gold-dark); border-color: var(--gold); color: var(--bg); font-weight: 600; }
+        .reset-btn { width: 100%; padding: 12px; background: transparent; border: 1px solid var(--border); border-radius: 8px; color: var(--text-dim); font-family: var(--font-body); font-size: 0.82rem; cursor: pointer; transition: all 0.3s; letter-spacing: 0.5px; }
+        .reset-btn:hover { border-color: rgba(201,169,110,0.3); color: var(--gold); }
+        @media (max-width: 768px) { .customizer-section { padding: 50px 24px; } .customizer-layout { grid-template-columns: 1fr; } .preview-spoiler-overlay { width: 80px; } .preview-text-overlay { font-size: 1rem; } }
+
+        /* ===================== FOOTER ===================== */
+        .footer {
+            padding: 60px 0 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 48px;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 16px;
+        }
+
+        .footer-brand p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .footer h4 {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+
+        .footer ul {
+            list-style: none;
+        }
+
+        .footer ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer ul a {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            transition: color 0.3s;
+        }
+
+        .footer ul a:hover {
+            color: var(--gold-light);
+        }
+
+        .footer-bottom {
+            padding: 24px 0;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        /* ===================== RESPONSIVE ===================== */
+        @media (max-width: 1024px) {
+            .specs-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .detail-title {
+                font-size: 2rem;
+            }
+
+            .detail-price .price-amount {
+                font-size: 2.2rem;
+            }
+
+            .detail-ctas {
+                flex-direction: column;
+            }
+
+            .specs-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .payment-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 32px;
+            }
+
+            .detail-image-wrap img {
+                height: 280px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pay-full-price {
+                font-size: 2.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ========== NAV ========== -->
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html#inventory" class="logo">Auto<span>Prime</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html#inventory">Inventory</a></li>
+                <li><a href="index.html#why-us">Why Us</a></li>
+                <li><a href="index.html#testimonials">Testimonials</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+            <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html#inventory">Inventory</a>
+        <a href="index.html#why-us">Why Us</a>
+        <a href="index.html#testimonials">Testimonials</a>
+        <a href="index.html#contact">Contact</a>
+    </div>
+
+    <!-- ========== BACK BAR ========== -->
+    <div class="back-bar">
+        <div class="container">
+            <a href="index.html#inventory">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/></svg>
+                Back to Inventory
+            </a>
+        </div>
+    </div>
+
+    <!-- ========== CAR DETAIL ========== -->
+    <section class="detail-section">
+        <div class="container">
+            <div class="detail-grid">
+                <!-- Left: Image -->
+                <div class="detail-image-wrap reveal">
+                    <img src="images/bmw-3-series.jpg" alt="2022 BMW 3 Series Alpine White">
+                </div>
+
+                <!-- Right: Summary -->
+                <div class="reveal" style="transition-delay:0.15s;">
+                    <div class="car-badge">
+                        Petrol <span class="dot"></span> Certified
+                    </div>
+                    <h1 class="detail-title">2022 BMW 3 Series</h1>
+                    <div class="detail-meta">
+                        <div class="meta-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                            22,000 mi
+                        </div>
+                        <div class="meta-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.646.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                            Automatic
+                        </div>
+                        <div class="meta-item">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h1.5c.621 0 1.125.504 1.125 1.125v4.5M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125h-4.5"/></svg>
+                            Alpine White
+                        </div>
+                    </div>
+                    <div class="detail-price">
+                        <span class="price-amount" id="heroPrice">$41,500</span>
+                        <span class="price-finance" id="heroFinance">Finance from <strong>$589/mo</strong></span>
+                    </div>
+                    <div class="detail-ctas">
+                        <button class="btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"/></svg>
+                            Schedule Test Drive
+                        </button>
+                        <button class="btn-outline">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"/></svg>
+                            Request Info
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== SPECS ========== -->
+    <section class="specs-section">
+        <div class="container">
+            <p class="section-label reveal">Specifications</p>
+            <h2 class="section-title reveal">Vehicle Details</h2>
+            <div class="specs-grid">
+                <div class="spec-item reveal">
+                    <div class="spec-label">Year</div>
+                    <div class="spec-value">2022</div>
+                </div>
+                <div class="spec-item reveal">
+                    <div class="spec-label">Make</div>
+                    <div class="spec-value">BMW</div>
+                </div>
+                <div class="spec-item reveal">
+                    <div class="spec-label">Model</div>
+                    <div class="spec-value">3 Series 330i</div>
+                </div>
+                <div class="spec-item reveal">
+                    <div class="spec-label">Mileage</div>
+                    <div class="spec-value">22,000 mi</div>
+                </div>
+                <div class="spec-item reveal">
+                    <div class="spec-label">Engine</div>
+                    <div class="spec-value">2.0L TwinPower Turbo</div>
+                </div>
+                <div class="spec-item reveal">
+                    <div class="spec-label">Transmission</div>
+                    <div class="spec-value">8-Speed Automatic</div>
+                </div>
+                <div class="spec-item reveal">
+                    <div class="spec-label">Fuel Type</div>
+                    <div class="spec-value">Petrol</div>
+                </div>
+                <div class="spec-item reveal">
+                    <div class="spec-label">Fuel Economy</div>
+                    <div class="spec-value">26 city / 36 hwy</div>
+                </div>
+                <div class="spec-item reveal">
+                    <div class="spec-label">Drive</div>
+                    <div class="spec-value">Rear-Wheel Drive</div>
+                </div>
+                <div class="spec-item reveal">
+                    <div class="spec-label">Exterior Color</div>
+                    <div class="spec-value">Alpine White</div>
+                </div>
+                <div class="spec-item reveal">
+                    <div class="spec-label">Interior</div>
+                    <div class="spec-value">Black Dakota Leather</div>
+                </div>
+                <div class="spec-item reveal">
+                    <div class="spec-label">VIN</div>
+                    <div class="spec-value">WBA5R1C07NBA12345</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CUSTOMIZER ========== -->
+    <section class="customizer-section reveal">
+      <div class="section-label">Personalize</div>
+      <div class="section-title">Customize Your Vehicle</div>
+      <div class="section-subtitle">Visualize your dream configuration. Choose colors, add a spoiler, apply stripes, or add custom text.</div>
+      <div class="customizer-layout">
+        <div class="customizer-preview">
+          <div class="preview-badge">Live Preview</div>
+          <img id="customizerImg" src="images/bmw-3-series.jpg" alt="Customize 2022 BMW 3 Series" style="transition: opacity 0.4s ease;" />
+        </div>
+        <div class="customizer-controls">
+          <div class="control-group"><div class="control-group-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>Exterior Color</div><div id="activeColorName" style="font-size:0.8rem; color:var(--gold); margin-bottom:12px; font-weight:500;">Original (Silver)</div><div class="color-swatches">
+  <div class="swatch-item"><div class="color-swatch swatch-white active" onclick="setColor(this, 'original')"></div><span class="color-swatch-label">Original</span></div>
+  <div class="swatch-item"><div class="color-swatch swatch-black" onclick="setColor(this, 'black')"></div><span class="color-swatch-label">Black</span></div>
+</div></div>
+          <div class="control-group"><div class="control-group-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17h14M7 12h10l2 5H5l2-5zM9 12V8l3-3 3 3v4"/></svg>Rear Spoiler</div><div class="toggle-row"><span class="toggle-label">Add rear spoiler</span><div class="toggle-switch" id="spoilerToggle" onclick="toggleSpoiler()"></div></div></div>
+          <div class="control-group"><div class="control-group-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="4" x2="20" y2="4"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="20" x2="20" y2="20"/></svg>Stripes &amp; Decals</div><div class="stripe-options"><button class="stripe-btn active" onclick="setStripe(this,'none')">None</button><button class="stripe-btn" onclick="setStripe(this,'racing')">Racing Stripes</button><button class="stripe-btn" onclick="setStripe(this,'side')">Side Stripe</button><button class="stripe-btn" onclick="setStripe(this,'hood')">Hood Accent</button></div></div>
+          <div class="control-group"><div class="control-group-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>Custom Text</div><input type="text" class="custom-text-input" id="customText" placeholder="Enter text (e.g. your name)" maxlength="20" oninput="updateText()"><div class="text-hint">Max 20 characters. Displayed on the vehicle body.</div></div>
+          <button class="reset-btn" onclick="resetCustomizer()">Reset All Customizations</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== PAYMENT ========== -->
+    <section class="payment-section">
+        <div class="container">
+            <p class="section-label reveal">Pricing</p>
+            <h2 class="section-title reveal">Payment Options</h2>
+            <div class="payment-grid">
+                <!-- Pay in Full -->
+                <div class="payment-card reveal">
+                    <h3>Pay in Full</h3>
+                    <p class="subtitle">One-time purchase price</p>
+                    <div class="pay-full-price">$41,500</div>
+                    <p class="pay-full-note">Price excludes tax, title, registration, and dealer fees.</p>
+                    <button class="btn-primary" style="margin-top:24px;width:100%;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 00-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 01-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 003 15h-.75M15 10.5a3 3 0 11-6 0 3 3 0 016 0zm3 0h.008v.008H18V10.5zm-12 0h.008v.008H6V10.5z"/></svg>
+                        Purchase Now
+                    </button>
+                </div>
+
+                <!-- Finance -->
+                <div class="payment-card reveal" style="transition-delay:0.15s;">
+                    <h3>Finance It</h3>
+                    <p class="subtitle">Estimate your monthly payment</p>
+
+                    <div class="calc-group">
+                        <label for="bmw-down">Down Payment ($)</label>
+                        <input type="number" id="bmw-down" value="5000" min="0" max="41500" oninput="calcBMW()">
+                    </div>
+
+                    <div class="calc-group">
+                        <label for="bmw-term">Loan Term</label>
+                        <select id="bmw-term" onchange="calcBMW()">
+                            <option value="36">36 months</option>
+                            <option value="48">48 months</option>
+                            <option value="60" selected>60 months</option>
+                            <option value="72">72 months</option>
+                            <option value="84">84 months</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-group">
+                        <label for="bmw-apr">APR (%)</label>
+                        <input type="number" id="bmw-apr" value="5.9" min="0" max="30" step="0.1" oninput="calcBMW()">
+                    </div>
+
+                    <div class="calc-result" id="bmw-result">
+                        <div class="result-label">Estimated Monthly Payment</div>
+                        <div class="result-value">$689/mo</div>
+                        <div class="result-note">For illustration purposes only</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <div class="logo">Auto<span>Prime</span></div>
+                    <p>Premium pre-owned vehicles with certified quality. Your journey to luxury starts here.</p>
+                </div>
+                <div>
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html#inventory">Inventory</a></li>
+                        <li><a href="index.html#why-us">Why Us</a></li>
+                        <li><a href="index.html#testimonials">Testimonials</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Services</h4>
+                    <ul>
+                        <li><a href="#">Financing</a></li>
+                        <li><a href="#">Trade-In</a></li>
+                        <li><a href="#">Warranty</a></li>
+                        <li><a href="#">Service Center</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="#">1234 Auto Blvd, Suite 100</a></li>
+                        <li><a href="tel:+15551234567">(555) 123-4567</a></li>
+                        <li><a href="mailto:info@autoprime.com">info@autoprime.com</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 AutoPrime. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ========== SCRIPTS ========== -->
+    <script>
+        // Mobile menu
+        const hamburger = document.getElementById('hamburger');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const mobileOverlay = document.getElementById('mobileOverlay');
+
+        function toggleMenu() {
+            hamburger.classList.toggle('active');
+            mobileMenu.classList.toggle('open');
+            mobileOverlay.classList.toggle('show');
+            document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+        }
+
+        hamburger.addEventListener('click', toggleMenu);
+        mobileOverlay.addEventListener('click', toggleMenu);
+
+        document.querySelectorAll('.mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (mobileMenu.classList.contains('open')) toggleMenu();
+            });
+        });
+
+        // Scroll Reveal
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+        // Finance Calculator
+        function calcBMW() {
+            const price = 41500;
+            const down = parseFloat(document.getElementById('bmw-down').value) || 0;
+            const term = parseInt(document.getElementById('bmw-term').value);
+            const apr = parseFloat(document.getElementById('bmw-apr').value) || 0;
+
+            const principal = price - down;
+            if (principal <= 0) {
+                document.getElementById('bmw-result').querySelector('.result-value').textContent = '$0/mo';
+                return;
+            }
+
+            let monthly;
+            if (apr === 0) {
+                monthly = principal / term;
+            } else {
+                const r = (apr / 100) / 12;
+                monthly = principal * (r * Math.pow(1 + r, term)) / (Math.pow(1 + r, term) - 1);
+            }
+
+            document.getElementById('bmw-result').querySelector('.result-value').textContent =
+                '$' + Math.round(monthly).toLocaleString() + '/mo';
+        }
+
+        // Run calculator on load
+        calcBMW();
+
+        // ── Customizer ──
+    const colorImages = {
+      original: 'images/bmw-3-series.jpg',
+      black: 'images/black-bmw-3-series.jpg'
+    };
+    const colorLabels = { original: 'Original (Silver)', black: 'Midnight Black' };
+    const activeColorName = document.getElementById('activeColorName');
+    const previewImg = document.getElementById('customizerImg');
+
+    function setColor(swatch, color) {
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+      swatch.classList.add('active');
+      previewImg.style.opacity = '0';
+      const tmp = new Image();
+      tmp.onload = function() { previewImg.src = colorImages[color]; previewImg.style.opacity = '1'; };
+      tmp.src = colorImages[color];
+      if (activeColorName) activeColorName.textContent = colorLabels[color];
+      var hp = document.getElementById('heroPrice');
+      var hf = document.getElementById('heroFinance');
+      if (color === 'black') {
+        hp.innerHTML = '$41,590 <span style="font-size:0.7em;color:var(--text-muted);font-weight:400">(+$90 Black Edition)</span>';
+        hf.innerHTML = 'Finance from <strong>$591/mo</strong>';
+      } else {
+        hp.textContent = '$41,500';
+        hf.innerHTML = 'Finance from <strong>$589/mo</strong>';
+      }
+    }
+
+        function toggleSpoiler() {
+          document.getElementById('spoilerToggle').classList.toggle('active');
+        }
+
+        function setStripe(btn, type) {
+          document.querySelectorAll('.stripe-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        }
+
+        function updateText() {
+          const text = document.getElementById('customText').value.trim();
+        }
+
+        function resetCustomizer() {
+          setColor(document.querySelector('.swatch-white'), 'original');
+          const spoilerToggle = document.getElementById('spoilerToggle');
+          if (spoilerToggle.classList.contains('active')) spoilerToggle.classList.remove('active');
+          setStripe(document.querySelector('.stripe-btn'), 'none');
+          document.getElementById('customText').value = '';
+        }
+    </script>
+</body>
+</html>

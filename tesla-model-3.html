@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2023 Tesla Model 3 — AutoPrime</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #111111;
+      --bg-elevated: #161616;
+      --gold: #c9a96e;
+      --gold-light: #e2c992;
+      --gold-dark: #a8883d;
+      --text: #f0ece2;
+      --text-dim: #8a8475;
+      --text-muted: #5a5549;
+      --border: rgba(201,169,110,0.12);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
+
+    /* --- Nav (Glassmorphism) --- */
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 60px;
+      background: rgba(10,10,10,0.72);
+      backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 1000;
+    }
+    .logo { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 800; color: var(--gold); letter-spacing: -1px; text-decoration: none; }
+    .logo span { color: var(--text); }
+    nav ul { list-style: none; display: flex; gap: 32px; }
+    nav ul a { text-decoration: none; color: var(--text-dim); font-weight: 500; font-size: 0.92rem; transition: color 0.3s; }
+    nav ul a:hover { color: var(--gold-light); }
+    .nav-cta {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg) !important; padding: 10px 22px; border-radius: 6px;
+      font-weight: 700 !important; transition: opacity 0.3s !important;
+    }
+    .nav-cta:hover { opacity: 0.88; }
+
+    /* Hamburger */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; z-index: 1001; background: none; border: none; padding: 4px; }
+    .hamburger span { display: block; width: 26px; height: 2px; background: var(--gold); border-radius: 2px; transition: transform 0.3s, opacity 0.3s; }
+    .hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile menu overlay */
+    .mobile-menu {
+      display: none; position: fixed; inset: 0; z-index: 999;
+      background: rgba(10,10,10,0.95); backdrop-filter: blur(20px);
+      flex-direction: column; justify-content: center; align-items: center; gap: 28px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { text-decoration: none; color: var(--text); font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; transition: color 0.3s; }
+    .mobile-menu a:hover { color: var(--gold); }
+
+    /* --- Back Bar --- */
+    .back-bar {
+      padding: 14px 60px; background: var(--bg-card);
+      border-bottom: 1px solid var(--border); font-size: 0.9rem;
+    }
+    .back-bar a { color: var(--gold); text-decoration: none; font-weight: 600; transition: color 0.3s; }
+    .back-bar a:hover { color: var(--gold-light); }
+
+    /* --- Car Detail Grid --- */
+    .car-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: 520px; }
+    .car-gallery { overflow: hidden; background: var(--bg-card); position: relative; }
+    .car-gallery img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .car-gallery:hover img { transform: scale(1.06); }
+    .car-summary {
+      padding: 50px 50px; display: flex; flex-direction: column; justify-content: center;
+      background: var(--bg-elevated);
+    }
+    .badge {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg); font-size: 0.75rem; font-weight: 700;
+      padding: 5px 14px; border-radius: 20px; margin-bottom: 16px;
+      text-transform: uppercase; letter-spacing: 0.8px; width: fit-content;
+    }
+    .car-summary h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem; font-weight: 800; line-height: 1.15;
+      margin-bottom: 14px; color: var(--text);
+    }
+    .meta-row { display: flex; gap: 22px; flex-wrap: wrap; margin-bottom: 28px; }
+    .meta-item { display: flex; align-items: center; gap: 6px; color: var(--text-dim); font-size: 0.9rem; }
+    .meta-item strong { color: var(--text); }
+    .price-display {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem; font-weight: 900; line-height: 1;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .price-sub { color: var(--text-dim); font-size: 0.9rem; margin-top: 6px; margin-bottom: 32px; }
+    .cta-buttons { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg); padding: 14px 30px; border-radius: 8px; text-decoration: none;
+      font-weight: 700; font-size: 0.95rem; transition: opacity 0.3s, transform 0.3s;
+    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-outline {
+      border: 2px solid var(--gold); color: var(--gold);
+      padding: 14px 30px; border-radius: 8px; text-decoration: none;
+      font-weight: 700; font-size: 0.95rem; transition: all 0.3s; background: transparent;
+    }
+    .btn-outline:hover { background: var(--gold); color: var(--bg); }
+
+    /* --- Specs Section --- */
+    .specs-section { padding: 70px 60px; background: var(--bg); }
+    .specs-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-weight: 800; margin-bottom: 36px; color: var(--text);
+    }
+    .specs-section h2::after {
+      content: ''; display: block; width: 50px; height: 3px; margin-top: 12px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark)); border-radius: 2px;
+    }
+    .specs-grid { display: grid; grid-template-columns: 1fr 1fr; border-top: 1px solid var(--border); }
+    .spec-item { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; border-bottom: 1px solid var(--border); transition: background 0.2s; }
+    .spec-item:hover { background: rgba(201,169,110,0.03); }
+    .spec-label { font-size: 0.78rem; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); }
+    .spec-value { font-size: 0.95rem; font-weight: 600; color: var(--text); text-align: right; }
+
+    /* --- Payment Section --- */
+    .payment-section { padding: 70px 60px; background: var(--bg-elevated); }
+    .payment-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-weight: 800; margin-bottom: 8px; color: var(--text);
+    }
+    .payment-section h2::after {
+      content: ''; display: block; width: 50px; height: 3px; margin-top: 12px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark)); border-radius: 2px;
+    }
+    .payment-section > p { color: var(--text-dim); margin-bottom: 40px; margin-top: 16px; }
+    .payment-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .pay-card {
+      border: 1px solid var(--border); border-radius: 16px;
+      padding: 40px; background: var(--bg-card); transition: border-color 0.3s;
+    }
+    .pay-card:hover { border-color: rgba(201,169,110,0.35); }
+    .pay-card.featured { border-color: var(--gold); background: linear-gradient(180deg, rgba(201,169,110,0.06) 0%, var(--bg-card) 100%); }
+    .pay-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem; font-weight: 700; margin-bottom: 8px; color: var(--text);
+    }
+    .pay-card .pay-desc { color: var(--text-dim); font-size: 0.9rem; margin-bottom: 28px; line-height: 1.7; }
+    .pay-total {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.4rem; font-weight: 900; margin-bottom: 6px;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .pay-note { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 28px; }
+    .calc-row { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
+    .calc-field label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-dim); margin-bottom: 6px; letter-spacing: 0.3px; }
+    .calc-field input, .calc-field select {
+      width: 100%; padding: 12px 16px;
+      border: 1.5px solid rgba(201,169,110,0.2); border-radius: 8px;
+      font-size: 0.95rem; font-family: 'Inter', sans-serif;
+      background: var(--bg); color: var(--text);
+      outline: none; transition: border-color 0.3s, box-shadow 0.3s;
+      -webkit-appearance: none;
+    }
+    .calc-field input:focus, .calc-field select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.12);
+    }
+    .calc-field select { cursor: pointer; }
+    .calc-field select option { background: var(--bg-card); color: var(--text); }
+    .monthly-result {
+      background: linear-gradient(135deg, rgba(201,169,110,0.1), rgba(201,169,110,0.04));
+      border: 1px solid var(--border); border-radius: 12px;
+      padding: 20px 24px; text-align: center; margin-bottom: 24px;
+    }
+    .monthly-result .mo-label { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .monthly-result .mo-amount {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem; font-weight: 900; color: var(--gold-light);
+    }
+    .btn-full {
+      display: block; text-align: center; padding: 15px;
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg); border-radius: 8px; text-decoration: none;
+      font-weight: 700; font-size: 1rem; cursor: pointer;
+      border: none; width: 100%; font-family: 'Inter', sans-serif;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .btn-full:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-full-dark {
+      background: var(--text); color: var(--bg);
+    }
+    .btn-full-dark:hover { opacity: 0.85; }
+
+    /* --- Customizer Section --- */
+    .customizer-section {
+      padding: 70px 60px;
+      background: var(--bg);
+    }
+    .customizer-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-weight: 800; margin-bottom: 36px; color: var(--text);
+    }
+    .customizer-section h2::after {
+      content: ''; display: block; width: 50px; height: 3px; margin-top: 12px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-dark)); border-radius: 2px;
+    }
+    .customizer-layout {
+      display: grid; grid-template-columns: 1.4fr 1fr; gap: 36px; align-items: start;
+    }
+    .customizer-preview {
+      position: relative; border-radius: 14px; overflow: hidden;
+      border: 1px solid var(--border); background: var(--bg-card);
+    }
+    .customizer-preview img {
+      width: 100%; display: block; transition: filter 0.4s ease;
+    }
+    .customizer-controls {
+      display: flex; flex-direction: column; gap: 28px;
+    }
+    .control-group h4 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 14px;
+    }
+    .color-swatches {
+      display: flex; gap: 10px; flex-wrap: wrap;
+    }
+    .color-swatch {
+      width: 38px; height: 38px; border-radius: 50%; cursor: pointer;
+      border: 3px solid transparent; transition: border-color 0.3s, transform 0.3s;
+      position: relative;
+    }
+    .color-swatch:hover { transform: scale(1.12); }
+    .color-swatch.active { border-color: var(--gold); }
+    .color-swatch[data-color="white"]  { background: #e8e8e8; }
+    .color-swatch[data-color="black"]  { background: #1a1a1e; }
+    .reset-btn {
+      padding: 12px 24px; border-radius: 8px; cursor: pointer;
+      border: 2px solid var(--gold); background: transparent;
+      color: var(--gold); font-family: 'Inter', sans-serif;
+      font-size: 0.9rem; font-weight: 700; transition: all 0.3s;
+      align-self: flex-start;
+    }
+    .reset-btn:hover { background: var(--gold); color: var(--bg); }
+
+    @media (max-width: 900px) {
+      .customizer-section { padding: 48px 24px; }
+      .customizer-layout { grid-template-columns: 1fr; }
+    }
+
+    /* --- Footer --- */
+    footer {
+      background: var(--bg-card); color: var(--text-dim);
+      padding: 44px 60px; display: flex; justify-content: space-between; align-items: center;
+      border-top: 1px solid var(--border);
+    }
+    .f-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem; font-weight: 800; color: var(--gold); letter-spacing: -1px;
+    }
+    footer p { font-size: 0.9rem; }
+    footer a { color: var(--text-dim); text-decoration: none; transition: color 0.3s; }
+    footer a:hover { color: var(--gold-light); }
+
+    /* --- Scroll Reveal --- */
+    .reveal {
+      opacity: 0; transform: translateY(32px);
+      transition: opacity 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94), transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* --- Responsive --- */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      nav ul { display: none; }
+      .hamburger { display: flex; }
+      .back-bar { padding: 12px 24px; }
+      .car-detail { grid-template-columns: 1fr; }
+      .car-gallery { height: 280px; }
+      .car-summary { padding: 32px 24px; }
+      .car-summary h1 { font-size: 1.8rem; }
+      .price-display { font-size: 2.2rem; }
+      .specs-section { padding: 48px 24px; }
+      .specs-grid { grid-template-columns: 1fr; }
+      .payment-section { padding: 48px 24px; }
+      .payment-grid { grid-template-columns: 1fr; }
+      footer { flex-direction: column; gap: 12px; text-align: center; padding: 32px 24px; }
+    }
+    @media (max-width: 480px) {
+      .car-summary h1 { font-size: 1.5rem; }
+      .price-display { font-size: 1.9rem; }
+      .cta-buttons { flex-direction: column; }
+      .cta-buttons a { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav>
+    <a href="index.html#inventory" class="logo">Auto<span>Prime</span></a>
+    <ul>
+      <li><a href="index.html#inventory">Inventory</a></li>
+      <li><a href="index.html#why-us">Why Us</a></li>
+      <li><a href="index.html#testimonials">Reviews</a></li>
+      <li><a href="index.html#contact" class="nav-cta">Contact Us</a></li>
+    </ul>
+    <button class="hamburger" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="index.html#inventory" onclick="toggleMenu()">Inventory</a>
+    <a href="index.html#why-us" onclick="toggleMenu()">Why Us</a>
+    <a href="index.html#testimonials" onclick="toggleMenu()">Reviews</a>
+    <a href="index.html#contact" onclick="toggleMenu()">Contact Us</a>
+  </div>
+
+  <!-- Back Bar -->
+  <div class="back-bar"><a href="index.html#inventory">&larr; Back to Inventory</a></div>
+
+  <!-- Car Detail -->
+  <div class="car-detail">
+    <div class="car-gallery">
+      <img src="images/tesla-model-3.jpg" alt="2023 Tesla Model 3">
+    </div>
+    <div class="car-summary">
+      <span class="badge">&#9889; Electric &middot; Zero Emissions</span>
+      <h1>2023 Tesla Model 3</h1>
+      <div class="meta-row">
+        <div class="meta-item">&#128205; <strong>11,000</strong> miles</div>
+        <div class="meta-item">&#9881;&#65039; <strong>Automatic</strong></div>
+        <div class="meta-item">&#127912; <strong>Pearl White</strong></div>
+      </div>
+      <div class="price-display" id="heroPrice">$38,700</div>
+      <div class="price-sub" id="heroFinance">or finance from $529/mo &middot; 12-month warranty included</div>
+      <div class="cta-buttons">
+        <a href="index.html#contact" class="btn-primary">Book a Test Drive</a>
+        <a href="index.html#contact" class="btn-outline">Contact Us</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Specs -->
+  <section class="specs-section">
+    <h2 class="reveal">Vehicle Specifications</h2>
+    <div class="specs-grid">
+      <div class="spec-item reveal"><div class="spec-label">Year</div><div class="spec-value">2023</div></div>
+      <div class="spec-item reveal"><div class="spec-label">Make</div><div class="spec-value">Tesla</div></div>
+      <div class="spec-item reveal"><div class="spec-label">Model</div><div class="spec-value">Model 3 RWD</div></div>
+      <div class="spec-item reveal"><div class="spec-label">Mileage</div><div class="spec-value">11,000 mi</div></div>
+      <div class="spec-item reveal"><div class="spec-label">Motor</div><div class="spec-value">Single Motor RWD</div></div>
+      <div class="spec-item reveal"><div class="spec-label">Range</div><div class="spec-value">358 miles (EPA)</div></div>
+      <div class="spec-item reveal"><div class="spec-label">Fuel Type</div><div class="spec-value">Electric</div></div>
+      <div class="spec-item reveal"><div class="spec-label">0-60 mph</div><div class="spec-value">5.8 seconds</div></div>
+      <div class="spec-item reveal"><div class="spec-label">Drive</div><div class="spec-value">Rear-Wheel Drive</div></div>
+      <div class="spec-item reveal"><div class="spec-label">Exterior Color</div><div class="spec-value">Pearl White</div></div>
+      <div class="spec-item reveal"><div class="spec-label">Supercharging</div><div class="spec-value">250 kW max</div></div>
+      <div class="spec-item reveal"><div class="spec-label">VIN</div><div class="spec-value">5YJ3E1EA9PF123456</div></div>
+    </div>
+  </section>
+
+  <!-- Customizer -->
+  <section class="customizer-section">
+    <h2 class="reveal">Customize Your Vehicle</h2>
+    <div class="customizer-layout reveal">
+      <div class="customizer-preview">
+        <img id="customizerImg" src="images/tesla-model-3.jpg" alt="Customize 2023 Tesla Model 3" style="transition: opacity 0.4s ease;">
+      </div>
+      <div class="customizer-controls">
+        <div class="control-group">
+          <h4>Exterior Color</h4>
+          <div id="activeColorName" style="font-size:0.8rem; color:var(--gold); margin-bottom:12px; font-weight:500;">Original (White)</div>
+          <div class="color-swatches">
+            <div class="color-swatch active" data-color="white" title="Original" onclick="setColor(this, 'original')"></div>
+            <div class="color-swatch" data-color="black" title="Black" onclick="setColor(this, 'black')"></div>
+          </div>
+        </div>
+        <button class="reset-btn" onclick="resetCustomizer()">Reset All</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Payment -->
+  <section class="payment-section">
+    <h2 class="reveal">Choose Your Payment Option</h2>
+    <p class="reveal">Pick the plan that works best for you. Both options include a 12-month warranty.</p>
+    <div class="payment-grid">
+
+      <div class="pay-card reveal">
+        <h3>&#128181; Pay in Full</h3>
+        <p class="pay-desc">One-time payment, no interest, no monthly obligations. Drive it home today.</p>
+        <div class="pay-total">$38,700</div>
+        <div class="pay-note">All taxes &amp; fees included at signing</div>
+        <a href="index.html#contact" class="btn-full btn-full-dark">Buy Now &mdash; Full Payment</a>
+      </div>
+
+      <div class="pay-card featured reveal">
+        <h3>&#128197; Finance It</h3>
+        <p class="pay-desc">Adjust the down payment and loan term to find your ideal monthly payment.</p>
+        <div class="calc-row">
+          <div class="calc-field">
+            <label>Down Payment ($)</label>
+            <input type="number" id="ts-down" value="4000" min="0" max="38700" oninput="calcTesla()">
+          </div>
+          <div class="calc-field">
+            <label>Loan Term</label>
+            <select id="ts-term" onchange="calcTesla()">
+              <option value="24">24 months</option>
+              <option value="36">36 months</option>
+              <option value="48">48 months</option>
+              <option value="60" selected>60 months</option>
+              <option value="72">72 months</option>
+            </select>
+          </div>
+          <div class="calc-field">
+            <label>APR (%)</label>
+            <input type="number" id="ts-apr" value="5.9" step="0.1" min="0" oninput="calcTesla()">
+          </div>
+        </div>
+        <div class="monthly-result">
+          <div class="mo-label">Estimated Monthly Payment</div>
+          <div class="mo-amount" id="ts-result">$529/mo</div>
+        </div>
+        <a href="index.html#contact" class="btn-full">Apply for Financing</a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="f-logo">Auto<span style="color:var(--text-dim)">Prime</span></div>
+    <p>123 Main Street, Auto City, CA 90001 &nbsp;|&nbsp; <a href="tel:+15550001234">(555) 000-1234</a></p>
+    <p>&copy; 2026 AutoPrime. All rights reserved.</p>
+  </footer>
+
+  <script>
+    /* Finance Calculator */
+    function calcTesla() {
+      var price = 38700;
+      var down = parseFloat(document.getElementById('ts-down').value) || 0;
+      var term = parseInt(document.getElementById('ts-term').value);
+      var apr = parseFloat(document.getElementById('ts-apr').value) / 100 / 12;
+      var principal = Math.max(0, price - down);
+      var monthly;
+      if (apr === 0) { monthly = principal / term; }
+      else { monthly = principal * apr * Math.pow(1 + apr, term) / (Math.pow(1 + apr, term) - 1); }
+      document.getElementById('ts-result').textContent = '$' + Math.round(monthly).toLocaleString() + '/mo';
+    }
+    calcTesla();
+
+    /* Hamburger Menu */
+    function toggleMenu() {
+      document.querySelector('.hamburger').classList.toggle('active');
+      document.getElementById('mobileMenu').classList.toggle('open');
+      document.body.style.overflow = document.getElementById('mobileMenu').classList.contains('open') ? 'hidden' : '';
+    }
+
+    /* Vehicle Customizer */
+    const colorImages = { original: 'images/tesla-model-3.jpg', black: 'images/black-tesla-model-3.jpg' };
+    const colorLabels = { original: 'Original (White)', black: 'Midnight Black' };
+    const activeColorName = document.getElementById('activeColorName');
+    const previewImg = document.getElementById('customizerImg');
+    function setColor(swatch, color) {
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+      swatch.classList.add('active');
+      previewImg.style.opacity = '0';
+      const tmp = new Image();
+      tmp.onload = function() { previewImg.src = colorImages[color]; previewImg.style.opacity = '1'; };
+      tmp.src = colorImages[color];
+      if (activeColorName) activeColorName.textContent = colorLabels[color];
+      var hp = document.getElementById('heroPrice');
+      var hf = document.getElementById('heroFinance');
+      if (color === 'black') {
+        hp.innerHTML = '$38,775 <span style="font-size:0.7em;color:var(--text-muted);font-weight:400">(+$75 Black Edition)</span>';
+        hf.innerHTML = 'or finance from $530/mo &middot; 12-month warranty included';
+      } else {
+        hp.textContent = '$38,700';
+        hf.innerHTML = 'or finance from $529/mo &middot; 12-month warranty included';
+      }
+    }
+
+    function resetCustomizer() {
+      document.querySelector('.color-swatch[data-color="white"]').click();
+    }
+
+    /* Scroll Reveal with Intersection Observer */
+    (function() {
+      var reveals = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function(entries) {
+          entries.forEach(function(entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        reveals.forEach(function(el) { observer.observe(el); });
+      } else {
+        reveals.forEach(function(el) { el.classList.add('visible'); });
+      }
+    })();
+  </script>
+</body>
+</html>

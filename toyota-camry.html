@@ -1,0 +1,1571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>2023 Toyota Camry SE — AutoPrime</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --bg-card: #111111;
+      --bg-elevated: #161616;
+      --gold: #c9a96e;
+      --gold-light: #e2c992;
+      --gold-dark: #a8883d;
+      --text: #f0ece2;
+      --text-dim: #8a8475;
+      --text-muted: #5a5549;
+      --border: rgba(201,169,110,0.12);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'Inter', -apple-system, sans-serif;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* ── Reveal Animations ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Glassmorphism Nav ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 60px;
+      height: 72px;
+      background: rgba(10, 10, 10, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+    .logo span {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+    .nav-links a {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      letter-spacing: 0.3px;
+      transition: color 0.3s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      transition: width 0.3s ease;
+    }
+    .nav-links a:hover { color: var(--gold-light); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: var(--bg) !important;
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 600 !important;
+      font-size: 0.85rem !important;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      border: none;
+    }
+    .nav-cta::after { display: none !important; }
+    .nav-cta:hover {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light)) !important;
+      color: var(--bg) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(201, 169, 110, 0.3);
+    }
+
+    /* ── Hamburger ── */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 1100;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+    .hamburger span {
+      width: 26px;
+      height: 2px;
+      background: var(--gold);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active span:nth-child(2) { opacity: 0; }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(5px, -5px);
+    }
+
+    /* ── Mobile Menu ── */
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      right: -100%;
+      width: 300px;
+      height: 100vh;
+      background: rgba(17, 17, 17, 0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 1050;
+      padding: 100px 40px 40px;
+      transition: right 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      border-left: 1px solid var(--border);
+    }
+    .mobile-menu.open { right: 0; }
+    .mobile-menu ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .mobile-menu a {
+      display: block;
+      padding: 14px 0;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--border);
+      transition: color 0.3s, padding-left 0.3s;
+    }
+    .mobile-menu a:hover {
+      color: var(--gold-light);
+      padding-left: 8px;
+    }
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1040;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.4s, visibility 0.4s;
+    }
+    .mobile-overlay.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+    }
+
+    /* ── Back Bar ── */
+    .back-bar {
+      padding: 14px 60px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      font-size: 0.85rem;
+    }
+    .back-bar a {
+      color: var(--text-dim);
+      font-weight: 500;
+      transition: color 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .back-bar a:hover { color: var(--gold); }
+    .back-bar a svg {
+      width: 16px;
+      height: 16px;
+      transition: transform 0.3s;
+    }
+    .back-bar a:hover svg { transform: translateX(-3px); }
+
+    /* ── Car Detail Section ── */
+    .car-detail {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 560px;
+    }
+
+    .car-gallery {
+      position: relative;
+      overflow: hidden;
+      background: var(--bg-card);
+    }
+    .car-gallery img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .car-gallery:hover img {
+      transform: scale(1.08);
+    }
+    .car-gallery::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(10,10,10,0.2) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .car-summary {
+      padding: 50px 50px 50px 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--bg);
+    }
+
+    .car-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+      margin-bottom: 16px;
+    }
+    .car-badge::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .car-title {
+      font-family: var(--font-display);
+      font-size: 2.6rem;
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+
+    .car-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 32px;
+    }
+    .car-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+      color: var(--text-dim);
+    }
+    .car-meta-item svg {
+      width: 18px;
+      height: 18px;
+      color: var(--gold);
+      flex-shrink: 0;
+    }
+
+    .car-divider {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), transparent);
+      margin-bottom: 28px;
+    }
+
+    .car-price-block { margin-bottom: 36px; }
+    .car-price {
+      font-family: var(--font-display);
+      font-size: 2.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+    }
+    .car-finance-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+    .car-finance-note strong {
+      color: var(--text-dim);
+      font-weight: 600;
+    }
+
+    .car-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: var(--bg);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.3px;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(201, 169, 110, 0.25);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      background: transparent;
+      color: var(--gold);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.3px;
+    }
+    .btn-outline:hover {
+      background: rgba(201, 169, 110, 0.08);
+      border-color: var(--gold-light);
+      color: var(--gold-light);
+      transform: translateY(-2px);
+    }
+
+    /* ── Specs Section ── */
+    .specs-section {
+      background: var(--bg-elevated);
+      padding: 80px 60px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .specs-section .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .specs-section .section-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 48px;
+    }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      border-top: 1px solid var(--border);
+    }
+    .spec-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+    .spec-item:hover {
+      background: rgba(201,169,110,0.03);
+    }
+    .spec-label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+    }
+    .spec-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+      text-align: right;
+    }
+
+    /* ── Payment Section ── */
+    .payment-section {
+      padding: 80px 60px;
+      background: var(--bg);
+    }
+    .payment-section .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .payment-section .section-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 48px;
+    }
+
+    .payment-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .payment-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      transition: all 0.3s ease;
+    }
+    .payment-card:hover {
+      border-color: rgba(201, 169, 110, 0.25);
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .payment-card-label {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    .payment-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .payment-card .payment-desc {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    .full-price-display {
+      font-family: var(--font-display);
+      font-size: 3rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+    .full-price-extras {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+    .full-price-extras strong {
+      color: var(--text-dim);
+    }
+
+    /* ── Dark Form Inputs ── */
+    .calc-form { display: flex; flex-direction: column; gap: 18px; }
+    .calc-field label {
+      display: block;
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+    .calc-field input,
+    .calc-field select {
+      width: 100%;
+      padding: 13px 16px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      font-weight: 500;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    .calc-field input::placeholder {
+      color: var(--text-muted);
+    }
+    .calc-field input:focus,
+    .calc-field select:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201, 169, 110, 0.1);
+    }
+    .calc-field select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a8475' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+      padding-right: 40px;
+    }
+    .calc-field select option {
+      background: var(--bg-card);
+      color: var(--text);
+    }
+
+    .calc-result {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      text-align: center;
+      margin-top: 6px;
+    }
+    .calc-result-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+    .calc-result-value {
+      font-family: var(--font-display);
+      font-size: 2.2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .calc-result-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .btn-calc {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      color: var(--bg);
+      font-family: var(--font-body);
+      font-size: 0.88rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      letter-spacing: 0.3px;
+      margin-top: 4px;
+    }
+    .btn-calc:hover {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      transform: translateY(-1px);
+      box-shadow: 0 4px 20px rgba(201, 169, 110, 0.25);
+    }
+
+    /* ── Customizer Section ── */
+    .customizer-section {
+      padding: 80px 60px;
+      background: var(--bg-elevated);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .customizer-section .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--gold);
+      margin-bottom: 10px;
+    }
+    .customizer-section .section-title {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    .customizer-section .section-subtitle {
+      color: var(--text-dim);
+      font-size: 0.92rem;
+      margin-bottom: 48px;
+      line-height: 1.6;
+    }
+
+    .customizer-layout {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 40px;
+      align-items: start;
+    }
+
+    /* Preview Area */
+    .customizer-preview {
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #0d0d0d;
+      border: 1px solid var(--border);
+      aspect-ratio: 16/10;
+    }
+    .customizer-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: filter 0.5s ease;
+    }
+    .preview-color-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      transition: background 0.5s ease, opacity 0.5s ease;
+      mix-blend-mode: multiply;
+      opacity: 0;
+    }
+    .preview-color-overlay.active { opacity: 1; }
+
+    .preview-stripe-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      opacity: 0;
+    }
+    .preview-stripe-overlay.active { opacity: 1; }
+    .stripe-racing {
+      background: repeating-linear-gradient(
+        90deg,
+        transparent 0%, transparent 42%,
+        rgba(255,255,255,0.12) 42%, rgba(255,255,255,0.12) 44%,
+        transparent 44%, transparent 56%,
+        rgba(255,255,255,0.12) 56%, rgba(255,255,255,0.12) 58%,
+        transparent 58%, transparent 100%
+      );
+    }
+    .stripe-side {
+      background: linear-gradient(
+        180deg,
+        transparent 0%, transparent 55%,
+        rgba(201,169,110,0.2) 55%, rgba(201,169,110,0.2) 60%,
+        transparent 60%, transparent 100%
+      );
+    }
+    .stripe-hood {
+      background: linear-gradient(
+        180deg,
+        transparent 0%, transparent 15%,
+        rgba(255,255,255,0.08) 15%, rgba(255,255,255,0.08) 45%,
+        transparent 45%, transparent 100%
+      );
+    }
+
+    .preview-spoiler-overlay {
+      position: absolute;
+      bottom: 28%;
+      right: 5%;
+      width: 120px;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      transform: translateY(8px);
+    }
+    .preview-spoiler-overlay.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .spoiler-svg {
+      width: 100%;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+    }
+
+    .preview-text-overlay {
+      position: absolute;
+      bottom: 35%;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.7), 0 0 20px rgba(0,0,0,0.5);
+      white-space: nowrap;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+    .preview-text-overlay.active { opacity: 1; }
+
+    .preview-badge {
+      position: absolute;
+      top: 16px;
+      left: 16px;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 8px 16px;
+      border-radius: 4px;
+      border: 1px solid rgba(201,169,110,0.2);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    /* Controls Panel */
+    .customizer-controls {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .control-group {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      transition: border-color 0.3s;
+    }
+    .control-group:hover { border-color: rgba(201,169,110,0.2); }
+
+    .control-group-title {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .control-group-title svg {
+      width: 16px;
+      height: 16px;
+      color: var(--gold);
+    }
+
+    /* Color Swatches */
+    .color-swatches {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .color-swatch {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .color-swatch:hover { transform: scale(1.12); }
+    .color-swatch.active {
+      border-color: var(--gold);
+      box-shadow: 0 0 12px rgba(201,169,110,0.3);
+    }
+    .color-swatch.active::after {
+      content: '';
+      position: absolute;
+      inset: -5px;
+      border-radius: 50%;
+      border: 1px solid var(--gold);
+    }
+    .swatch-white { background: #f0f0f0; }
+    .swatch-black { background: #1a1a1a; border-color: rgba(255,255,255,0.15); }
+    .swatch-black.active { border-color: var(--gold); }
+    .swatch-red { background: #8b1a1a; }
+    .swatch-blue { background: #1a3a6b; }
+    .swatch-silver { background: #8a8a8a; }
+    .swatch-green { background: #1a4a2a; }
+    .swatch-gold { background: #8a6d2a; }
+    .color-swatch-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 4px;
+    }
+    .swatch-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Toggle Switch */
+    .toggle-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .toggle-label {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+    }
+    .toggle-switch {
+      width: 48px;
+      height: 26px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.3s;
+    }
+    .toggle-switch::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      left: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--text-muted);
+      transition: all 0.3s;
+    }
+    .toggle-switch.active {
+      background: var(--gold-dark);
+      border-color: var(--gold);
+    }
+    .toggle-switch.active::after {
+      left: 25px;
+      background: var(--gold-light);
+    }
+
+    /* Text Input */
+    .custom-text-input {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .custom-text-input::placeholder { color: var(--text-muted); }
+    .custom-text-input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(201,169,110,0.1);
+    }
+    .text-hint {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      margin-top: 8px;
+    }
+
+    /* Stripe Buttons */
+    .stripe-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .stripe-btn {
+      padding: 8px 16px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      font-family: var(--font-body);
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .stripe-btn:hover { border-color: rgba(201,169,110,0.3); color: var(--text); }
+    .stripe-btn.active {
+      background: var(--gold-dark);
+      border-color: var(--gold);
+      color: var(--bg);
+      font-weight: 600;
+    }
+
+    /* Reset Button */
+    .reset-btn {
+      width: 100%;
+      padding: 12px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-dim);
+      font-family: var(--font-body);
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      letter-spacing: 0.5px;
+    }
+    .reset-btn:hover {
+      border-color: rgba(201,169,110,0.3);
+      color: var(--gold);
+    }
+
+    @media (max-width: 768px) {
+      .customizer-section { padding: 50px 24px; }
+      .customizer-layout { grid-template-columns: 1fr; }
+      .preview-spoiler-overlay { width: 80px; }
+      .preview-text-overlay { font-size: 1rem; }
+    }
+
+    /* ── Trade-In Section ── */
+    .tradein-section { padding: 80px 60px; background: var(--bg); border-top: 1px solid var(--border); }
+    .tradein-section .section-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--gold); margin-bottom: 10px; }
+    .tradein-section .section-title { font-family: var(--font-display); font-size: 2rem; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+    .tradein-section .section-subtitle { color: var(--text-dim); font-size: 0.92rem; margin-bottom: 40px; }
+    .tradein-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    .tradein-form { display: flex; flex-direction: column; gap: 16px; }
+    .tradein-form input, .tradein-form select { width: 100%; padding: 14px 18px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--font-body); font-size: 0.9rem; outline: none; transition: border-color 0.3s; }
+    .tradein-form input:focus, .tradein-form select:focus { border-color: var(--gold); }
+    .tradein-form select option { background: var(--bg-card); color: var(--text); }
+    .tradein-form input::placeholder { color: var(--text-muted); }
+    .tradein-btn { padding: 14px; background: linear-gradient(135deg, var(--gold), var(--gold-dark)); color: var(--bg); border: none; border-radius: 8px; font-family: var(--font-body); font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: all 0.3s; }
+    .tradein-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(201,169,110,0.3); }
+    .tradein-result { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 40px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 300px; }
+    .tradein-result-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+    .tradein-result-value { font-family: var(--font-display); font-size: 3rem; font-weight: 700; background: linear-gradient(135deg, var(--gold), var(--gold-light)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .tradein-result-note { font-size: 0.82rem; color: var(--text-muted); margin-top: 12px; line-height: 1.6; }
+    .tradein-result-savings { margin-top: 20px; padding: 12px 24px; background: rgba(201,169,110,0.08); border: 1px solid var(--border); border-radius: 6px; font-size: 0.88rem; color: var(--gold); }
+    @media (max-width: 768px) { .tradein-section { padding: 50px 24px; } .tradein-layout { grid-template-columns: 1fr; } }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 60px 60px 30px;
+    }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+    .footer-brand .logo {
+      font-size: 1.5rem;
+      margin-bottom: 14px;
+      display: inline-block;
+    }
+    .footer-brand p {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      max-width: 300px;
+    }
+    .footer-col h4 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 10px; }
+    .footer-col a {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      transition: color 0.3s, padding-left 0.3s;
+    }
+    .footer-col a:hover {
+      color: var(--gold);
+      padding-left: 4px;
+    }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .footer-socials {
+      display: flex;
+      gap: 16px;
+    }
+    .footer-socials a {
+      color: var(--text-muted);
+      transition: color 0.3s;
+    }
+    .footer-socials a:hover { color: var(--gold); }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .specs-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+
+      .back-bar { padding: 12px 24px; }
+
+      .car-detail { grid-template-columns: 1fr; }
+      .car-summary { padding: 36px 24px; }
+      .car-title { font-size: 2rem; }
+      .car-price { font-size: 2.2rem; }
+
+      .specs-section { padding: 50px 24px; }
+      .specs-grid { grid-template-columns: 1fr; }
+
+      .payment-section { padding: 50px 24px; }
+      .payment-grid { grid-template-columns: 1fr; }
+
+      footer { padding: 40px 24px 24px; }
+      .footer-top { grid-template-columns: 1fr 1fr; gap: 30px; }
+      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .specs-grid { grid-template-columns: 1fr; }
+      .car-meta { gap: 12px; }
+      .car-actions { flex-direction: column; }
+      .btn-primary, .btn-outline { justify-content: center; }
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ── -->
+  <nav>
+    <a href="index.html#inventory" class="logo">Auto<span>Prime</span></a>
+    <ul class="nav-links">
+      <li><a href="index.html#inventory">Inventory</a></li>
+      <li><a href="index.html#why-us">Why Us</a></li>
+      <li><a href="index.html#testimonials">Reviews</a></li>
+      <li><a href="index.html#contact" class="nav-cta">Contact</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ── Mobile Menu ── -->
+  <div class="mobile-overlay" id="mobileOverlay"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="index.html#inventory">Inventory</a></li>
+      <li><a href="index.html#why-us">Why Us</a></li>
+      <li><a href="index.html#testimonials">Reviews</a></li>
+      <li><a href="index.html#contact">Contact Us</a></li>
+    </ul>
+  </div>
+
+  <!-- ── Back Bar ── -->
+  <div class="back-bar">
+    <a href="index.html#inventory">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to Inventory
+    </a>
+  </div>
+
+  <!-- ── Car Detail ── -->
+  <section class="car-detail">
+    <div class="car-gallery reveal">
+      <img src="images/toyota-camry.jpg" alt="2023 Toyota Camry SE in Midnight Black" />
+    </div>
+    <div class="car-summary reveal">
+      <div class="car-badge">Hybrid · Certified</div>
+      <h1 class="car-title">2023 Toyota<br>Camry SE</h1>
+      <div class="car-meta">
+        <div class="car-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          18,500 mi
+        </div>
+        <div class="car-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 10h4M14 10h4M10 14h4"/></svg>
+          Automatic
+        </div>
+        <div class="car-meta-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="4"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          Midnight Black
+        </div>
+      </div>
+      <div class="car-divider"></div>
+      <div class="car-price-block">
+        <div class="car-price" id="heroPrice">$28,900</div>
+        <div class="car-finance-note" id="heroFinance">Finance from <strong>$399/mo</strong> with approved credit</div>
+      </div>
+      <div class="car-actions">
+        <a href="index.html#contact" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+          Book a Test Drive
+        </a>
+        <a href="index.html#contact" class="btn-outline">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Contact Us
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Specs ── -->
+  <section class="specs-section reveal">
+    <div class="section-label">Specifications</div>
+    <div class="section-title">Vehicle Details</div>
+    <div class="specs-grid">
+      <div class="spec-item">
+        <div class="spec-label">Year</div>
+        <div class="spec-value">2023</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Make</div>
+        <div class="spec-value">Toyota</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Model</div>
+        <div class="spec-value">Camry SE</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Mileage</div>
+        <div class="spec-value">18,500 mi</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Engine</div>
+        <div class="spec-value">2.5L 4-Cyl Hybrid</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Transmission</div>
+        <div class="spec-value">CVT Automatic</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Fuel Type</div>
+        <div class="spec-value">Hybrid</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Fuel Economy</div>
+        <div class="spec-value">51 city / 53 hwy</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Drivetrain</div>
+        <div class="spec-value">Front-Wheel Drive</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Exterior Color</div>
+        <div class="spec-value">Midnight Black</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">Interior</div>
+        <div class="spec-value">Black Fabric</div>
+      </div>
+      <div class="spec-item">
+        <div class="spec-label">VIN</div>
+        <div class="spec-value">4T1B11HK9PU123456</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Customizer ── -->
+  <section class="customizer-section reveal">
+    <div class="section-label">Personalize</div>
+    <div class="section-title">Customize Your Vehicle</div>
+    <div class="section-subtitle">Visualize your dream configuration. Choose colors, add a spoiler, apply stripes, or add custom text.</div>
+
+    <div class="customizer-layout">
+      <div class="customizer-preview" id="customizerPreview">
+        <div class="preview-badge">Live Preview</div>
+        <img id="customizerImg" src="images/toyota-camry.jpg" alt="Customize 2023 Toyota Camry SE" style="transition: opacity 0.4s ease;" />
+      </div>
+
+      <div class="customizer-controls">
+        <!-- Color -->
+        <div class="control-group">
+          <div class="control-group-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>
+            Exterior Color
+          </div>
+          <div id="activeColorName" style="font-size:0.8rem; color:var(--gold); margin-bottom:12px; font-weight:500;">Original (Silver)</div>
+          <div class="color-swatches">
+            <div class="swatch-item"><div class="color-swatch swatch-white active" onclick="setColor(this, 'original')"></div><span class="color-swatch-label">Original</span></div>
+            <div class="swatch-item"><div class="color-swatch swatch-black" onclick="setColor(this, 'black')"></div><span class="color-swatch-label">Black</span></div>
+          </div>
+        </div>
+
+        <!-- Spoiler -->
+        <div class="control-group">
+          <div class="control-group-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17h14M7 12h10l2 5H5l2-5zM9 12V8l3-3 3 3v4"/></svg>
+            Rear Spoiler
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-label">Add rear spoiler</span>
+            <div class="toggle-switch" id="spoilerToggle" onclick="toggleSpoiler()"></div>
+          </div>
+        </div>
+
+        <!-- Stripes -->
+        <div class="control-group">
+          <div class="control-group-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="4" x2="20" y2="4"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="20" x2="20" y2="20"/></svg>
+            Stripes &amp; Decals
+          </div>
+          <div class="stripe-options">
+            <button class="stripe-btn active" onclick="setStripe(this, 'none')">None</button>
+            <button class="stripe-btn" onclick="setStripe(this, 'racing')">Racing Stripes</button>
+            <button class="stripe-btn" onclick="setStripe(this, 'side')">Side Stripe</button>
+            <button class="stripe-btn" onclick="setStripe(this, 'hood')">Hood Accent</button>
+          </div>
+        </div>
+
+        <!-- Text -->
+        <div class="control-group">
+          <div class="control-group-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg>
+            Custom Text
+          </div>
+          <input type="text" class="custom-text-input" id="customText" placeholder="Enter text (e.g. your name)" maxlength="20" oninput="updateText()">
+          <div class="text-hint">Max 20 characters. Displayed on the vehicle body.</div>
+        </div>
+
+        <!-- Reset -->
+        <button class="reset-btn" onclick="resetCustomizer()">Reset All Customizations</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Payment ── -->
+  <section class="payment-section reveal">
+    <div class="section-label">Pricing</div>
+    <div class="section-title">Payment Options</div>
+    <div class="payment-grid">
+
+      <!-- Pay in Full -->
+      <div class="payment-card">
+        <div class="payment-card-label">Option 1</div>
+        <h3>Pay in Full</h3>
+        <p class="payment-desc">Purchase outright and skip the monthly payments. Drive away today with full ownership.</p>
+        <div class="full-price-display">$28,900</div>
+        <div class="full-price-extras">
+          <strong>Includes:</strong> 12-month warranty<br>
+          <strong>Tax &amp; fees:</strong> Calculated at signing<br>
+          <strong>Certification:</strong> Toyota Certified Pre-Owned
+        </div>
+      </div>
+
+      <!-- Finance Calculator -->
+      <div class="payment-card">
+        <div class="payment-card-label">Option 2</div>
+        <h3>Finance It</h3>
+        <p class="payment-desc">Customize your monthly payment with our finance calculator below.</p>
+        <div class="calc-form">
+          <div class="calc-field">
+            <label for="cam-down">Down Payment ($)</label>
+            <input type="number" id="cam-down" value="3000" min="0" max="28900" step="500" />
+          </div>
+          <div class="calc-field">
+            <label for="cam-term">Loan Term</label>
+            <select id="cam-term">
+              <option value="36">36 months</option>
+              <option value="48">48 months</option>
+              <option value="60" selected>60 months</option>
+              <option value="72">72 months</option>
+              <option value="84">84 months</option>
+            </select>
+          </div>
+          <div class="calc-field">
+            <label for="cam-apr">Interest Rate (APR %)</label>
+            <input type="number" id="cam-apr" value="5.9" min="0" max="25" step="0.1" />
+          </div>
+          <button class="btn-calc" onclick="calcCamry()">Calculate Payment</button>
+          <div class="calc-result" id="cam-result">
+            <div class="calc-result-label">Estimated Monthly</div>
+            <div class="calc-result-value" id="cam-result-value">$399/mo</div>
+            <div class="calc-result-note">Excludes tax, title, and fees</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Trade-In Value Estimator ── -->
+  <section class="tradein-section reveal">
+    <div class="section-label">Trade-In</div>
+    <div class="section-title">Estimate Your Trade-In Value</div>
+    <div class="section-subtitle">Get an instant estimate for your current vehicle and see how much you could save.</div>
+    <div class="tradein-layout">
+      <form class="tradein-form" onsubmit="event.preventDefault(); estimateTradeIn();">
+        <select id="ti-make" required>
+          <option value="" disabled selected>Vehicle Make</option>
+          <option>Toyota</option><option>Honda</option><option>Ford</option><option>BMW</option><option>Tesla</option><option>Chevrolet</option><option>Nissan</option><option>Hyundai</option><option>Other</option>
+        </select>
+        <input type="text" id="ti-model" placeholder="Model (e.g. Corolla, Accord)" required>
+        <select id="ti-year" required>
+          <option value="" disabled selected>Year</option>
+          <option>2026</option><option>2025</option><option>2024</option><option>2023</option><option>2022</option><option>2021</option><option>2020</option><option>2019</option><option>2018</option><option>2017</option><option>2016</option><option>2015</option><option>Older</option>
+        </select>
+        <input type="number" id="ti-miles" placeholder="Current Mileage" required>
+        <select id="ti-condition" required>
+          <option value="" disabled selected>Condition</option>
+          <option value="excellent">Excellent</option><option value="good">Good</option><option value="fair">Fair</option><option value="poor">Poor</option>
+        </select>
+        <button type="submit" class="tradein-btn">Get Estimate</button>
+      </form>
+      <div class="tradein-result" id="tradeinResult">
+        <div class="tradein-result-label">Estimated Trade-In Value</div>
+        <div class="tradein-result-value" id="tradeinValue">--</div>
+        <div class="tradein-result-note">Fill out the form to get your instant estimate</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Footer ── -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo">Auto<span>Prime</span></div>
+        <p>Your trusted destination for premium pre-owned vehicles. Quality, transparency, and exceptional service since 2010.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="index.html#inventory">Inventory</a></li>
+          <li><a href="index.html#why-us">Why Choose Us</a></li>
+          <li><a href="index.html#testimonials">Customer Reviews</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#">Financing</a></li>
+          <li><a href="#">Trade-In</a></li>
+          <li><a href="#">Warranty</a></li>
+          <li><a href="#">Service Center</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="#">(555) 234-5678</a></li>
+          <li><a href="#">info@autoprime.com</a></li>
+          <li><a href="#">123 Motor Ave</a></li>
+          <li><a href="#">Mon–Sat 9am–7pm</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 AutoPrime. All rights reserved.</span>
+      <div class="footer-socials">
+        <a href="#" aria-label="Facebook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        </a>
+        <a href="#" aria-label="Instagram">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="#" aria-label="Twitter">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Hamburger Menu ──
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileOverlay = document.getElementById('mobileOverlay');
+
+    function toggleMenu() {
+      hamburger.classList.toggle('active');
+      mobileMenu.classList.toggle('open');
+      mobileOverlay.classList.toggle('open');
+      document.body.style.overflow = mobileMenu.classList.contains('open') ? 'hidden' : '';
+    }
+
+    hamburger.addEventListener('click', toggleMenu);
+    mobileOverlay.addEventListener('click', toggleMenu);
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (mobileMenu.classList.contains('open')) toggleMenu();
+      });
+    });
+
+    // ── Finance Calculator ──
+    function calcCamry() {
+      const price = 28900;
+      const down = parseFloat(document.getElementById('cam-down').value) || 0;
+      const term = parseInt(document.getElementById('cam-term').value) || 60;
+      const apr = parseFloat(document.getElementById('cam-apr').value) || 0;
+
+      const principal = price - down;
+      if (principal <= 0) {
+        document.getElementById('cam-result-value').textContent = '$0/mo';
+        return;
+      }
+
+      let monthly;
+      if (apr === 0) {
+        monthly = principal / term;
+      } else {
+        const r = (apr / 100) / 12;
+        monthly = principal * (r * Math.pow(1 + r, term)) / (Math.pow(1 + r, term) - 1);
+      }
+
+      document.getElementById('cam-result-value').textContent =
+        '$' + Math.round(monthly).toLocaleString() + '/mo';
+    }
+
+    // Run calculation on page load
+    calcCamry();
+
+    // Recalculate on input change
+    ['cam-down', 'cam-term', 'cam-apr'].forEach(id => {
+      document.getElementById(id).addEventListener('input', calcCamry);
+    });
+
+    // ── Scroll Reveal (Intersection Observer) ──
+    const revealElements = document.querySelectorAll('.reveal');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: '0px 0px -40px 0px'
+    });
+
+    revealElements.forEach(el => revealObserver.observe(el));
+
+    // ── Customizer ──
+    const colorImages = {
+      original: 'images/toyota-camry.jpg',
+      black: 'images/black-toyota-camry.jpg'
+    };
+    const colorLabels = { original: 'Original (Silver)', black: 'Midnight Black' };
+    const activeColorName = document.getElementById('activeColorName');
+    const previewImg = document.getElementById('customizerImg');
+
+    function setColor(swatch, color) {
+      document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+      swatch.classList.add('active');
+      previewImg.style.opacity = '0';
+      const tmp = new Image();
+      tmp.onload = function() { previewImg.src = colorImages[color]; previewImg.style.opacity = '1'; };
+      tmp.src = colorImages[color];
+      if (activeColorName) activeColorName.textContent = colorLabels[color];
+      var hp = document.getElementById('heroPrice');
+      var hf = document.getElementById('heroFinance');
+      if (color === 'black') {
+        hp.innerHTML = '$28,970 <span style="font-size:0.7em;color:var(--text-muted);font-weight:400">(+$70 Black Edition)</span>';
+        hf.innerHTML = 'Finance from <strong>$400/mo</strong> with approved credit';
+      } else {
+        hp.textContent = '$28,900';
+        hf.innerHTML = 'Finance from <strong>$399/mo</strong> with approved credit';
+      }
+    }
+
+    function toggleSpoiler() {
+      document.getElementById('spoilerToggle').classList.toggle('active');
+    }
+
+    function setStripe(btn, type) {
+      document.querySelectorAll('.stripe-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function updateText() {}
+
+    function estimateTradeIn() {
+      const year = parseInt(document.getElementById('ti-year').value) || 2020;
+      const miles = parseInt(document.getElementById('ti-miles').value) || 50000;
+      const condition = document.getElementById('ti-condition').value;
+      const conditionMult = {excellent: 1.0, good: 0.85, fair: 0.65, poor: 0.45};
+      const currentYear = 2026;
+      const age = currentYear - year;
+      let base = Math.max(2000, 28000 - (age * 2800));
+      base = base * (1 - Math.min(miles / 200000, 0.6));
+      base = base * (conditionMult[condition] || 0.7);
+      const value = Math.round(base / 100) * 100;
+      const carPrice = 28900;
+      const savings = carPrice - value;
+      document.getElementById('tradeinResult').innerHTML =
+        '<div class="tradein-result-label">Estimated Trade-In Value</div>' +
+        '<div class="tradein-result-value">$' + value.toLocaleString() + '</div>' +
+        '<div class="tradein-result-note">This is an estimate based on market data.<br>Final value determined at inspection.</div>' +
+        '<div class="tradein-result-savings">Your net price for this vehicle: <strong>$' + savings.toLocaleString() + '</strong></div>';
+    }
+
+    function resetCustomizer() {
+      setColor(document.querySelector('.swatch-white'), 'original');
+      document.getElementById('spoilerToggle').classList.remove('active');
+      setStripe(document.querySelector('.stripe-btn'), 'none');
+      document.getElementById('customText').value = '';
+    }
+  </script>
+
+</body>
+</html>
