@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="2023 RAM 1500 Big Horn at AutoPrime — 9,100 miles, certified pre-owned diesel truck with transparent pricing and financing.">
   <title>2023 RAM 1500 Big Horn — AutoPrime</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
@@ -28,7 +29,10 @@
       color: var(--text);
       background: var(--bg);
       -webkit-font-smoothing: antialiased;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
+    body.loaded { opacity: 1; }
 
     h1, h2, h3, h4 { font-family: 'Playfair Display', serif; }
 
@@ -776,6 +780,23 @@
 
       .nav-links.open { right: 0; }
 
+      .mobile-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 999;
+        visibility: hidden;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+      }
+
+      .mobile-overlay.open {
+        visibility: visible;
+        opacity: 1;
+        pointer-events: auto;
+      }
+
       .nav-links li { padding: 14px 0; border-bottom: 1px solid var(--border); width: 100%; }
 
       .nav-links a { font-size: 1rem; }
@@ -832,6 +853,7 @@
       <li><a href="#" class="nav-cta">Contact Us</a></li>
     </ul>
   </nav>
+  <div class="mobile-overlay" id="mobileOverlay"></div>
 
   <!-- ── Back Bar ── -->
   <div class="back-bar">
@@ -1054,13 +1076,36 @@
 
   <!-- ── Scripts ── -->
   <script>
+    // PAGE TRANSITIONS
+    document.body.classList.add('loaded');
+    document.querySelectorAll('a[href]').forEach(a => {
+      a.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href.startsWith('#') || href.startsWith('tel:') || href.startsWith('mailto:') || this.target === '_blank') return;
+        e.preventDefault();
+        document.body.classList.remove('loaded');
+        setTimeout(() => { window.location.href = href; }, 300);
+      });
+    });
+
     // Hamburger menu toggle
     const hamburger = document.getElementById('hamburger');
     const navLinks = document.getElementById('navLinks');
+    const mobileOverlay = document.getElementById('mobileOverlay');
 
     hamburger.addEventListener('click', () => {
       hamburger.classList.toggle('active');
       navLinks.classList.toggle('open');
+      mobileOverlay.classList.toggle('open');
+      document.body.style.overflow = navLinks.classList.contains('open') ? 'hidden' : '';
+    });
+
+    // Close menu on overlay click
+    mobileOverlay.addEventListener('click', () => {
+      hamburger.classList.remove('active');
+      navLinks.classList.remove('open');
+      mobileOverlay.classList.remove('open');
+      document.body.style.overflow = '';
     });
 
     // Close menu on link click
@@ -1068,6 +1113,8 @@
       link.addEventListener('click', () => {
         hamburger.classList.remove('active');
         navLinks.classList.remove('open');
+        mobileOverlay.classList.remove('open');
+        document.body.style.overflow = '';
       });
     });
 

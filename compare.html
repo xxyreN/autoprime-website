@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Compare vehicles side by side at AutoPrime. View specs, pricing, and features to find the perfect car for you.">
   <title>Compare Vehicles — AutoPrime</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -40,7 +41,10 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
+    body.loaded { opacity: 1; }
 
     /* ANIMATIONS */
     .reveal {
@@ -559,6 +563,18 @@
   </footer>
 
   <script>
+    // PAGE TRANSITIONS
+    document.body.classList.add('loaded');
+    document.querySelectorAll('a[href]').forEach(a => {
+      a.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href.startsWith('#') || href.startsWith('tel:') || href.startsWith('mailto:') || this.target === '_blank') return;
+        e.preventDefault();
+        document.body.classList.remove('loaded');
+        setTimeout(() => { window.location.href = href; }, 300);
+      });
+    });
+
     // CAR DATA
     const cars = {
       'toyota-camry': {

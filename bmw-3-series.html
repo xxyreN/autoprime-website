@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="2022 BMW 3 Series at AutoPrime — 22,000 miles, certified pre-owned with transparent pricing and bespoke financing options.">
     <title>2022 BMW 3 Series | AutoPrime</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -37,7 +38,10 @@
             color: var(--text);
             line-height: 1.6;
             overflow-x: hidden;
+            opacity: 0;
+            transition: opacity 0.4s ease;
         }
+        body.loaded { opacity: 1; }
 
         h1, h2, h3, h4, h5, h6 {
             font-family: 'Playfair Display', serif;
@@ -1003,6 +1007,18 @@
 
     <!-- ========== SCRIPTS ========== -->
     <script>
+        // PAGE TRANSITIONS
+        document.body.classList.add('loaded');
+        document.querySelectorAll('a[href]').forEach(a => {
+          a.addEventListener('click', function(e) {
+            const href = this.getAttribute('href');
+            if (href.startsWith('#') || href.startsWith('tel:') || href.startsWith('mailto:') || this.target === '_blank') return;
+            e.preventDefault();
+            document.body.classList.remove('loaded');
+            setTimeout(() => { window.location.href = href; }, 300);
+          });
+        });
+
         // Mobile menu
         const hamburger = document.getElementById('hamburger');
         const mobileMenu = document.getElementById('mobileMenu');

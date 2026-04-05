@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="2023 Tesla Model 3 at AutoPrime — 11,000 miles, certified pre-owned electric vehicle with transparent pricing and financing.">
   <title>2023 Tesla Model 3 — AutoPrime</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
@@ -20,7 +21,8 @@
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); -webkit-font-smoothing: antialiased; opacity: 0; transition: opacity 0.4s ease; }
+    body.loaded { opacity: 1; }
 
     /* --- Nav (Glassmorphism) --- */
     nav {
@@ -50,15 +52,52 @@
     .hamburger.active span:nth-child(2) { opacity: 0; }
     .hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-    /* Mobile menu overlay */
+    /* Mobile menu sliding panel */
     .mobile-menu {
-      display: none; position: fixed; inset: 0; z-index: 999;
-      background: rgba(10,10,10,0.95); backdrop-filter: blur(20px);
-      flex-direction: column; justify-content: center; align-items: center; gap: 28px;
+      position: fixed;
+      top: 0; right: -300px;
+      width: 300px; height: 100vh;
+      background: rgba(17, 17, 17, 0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      z-index: 1050;
+      padding: 100px 40px 40px;
+      transition: right 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      border-left: 1px solid var(--border);
+      display: block;
     }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a { text-decoration: none; color: var(--text); font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 600; transition: color 0.3s; }
-    .mobile-menu a:hover { color: var(--gold); }
+    .mobile-menu.open { right: 0; }
+    .mobile-menu a {
+      display: block;
+      padding: 14px 0;
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--text-dim);
+      text-decoration: none;
+      font-family: 'Playfair Display', serif;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.3s, padding-left 0.3s;
+    }
+    .mobile-menu a:hover {
+      color: var(--gold);
+      padding-left: 8px;
+    }
+
+    .mobile-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1040;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.4s, visibility 0.4s;
+    }
+    .mobile-overlay.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: all;
+    }
 
     /* --- Back Bar --- */
     .back-bar {
@@ -328,6 +367,7 @@
     <a href="index.html#testimonials" onclick="toggleMenu()">Reviews</a>
     <a href="index.html#contact" onclick="toggleMenu()">Contact Us</a>
   </div>
+  <div class="mobile-overlay" id="mobileOverlay"></div>
 
   <!-- Back Bar -->
   <div class="back-bar"><a href="index.html#inventory">&larr; Back to Inventory</a></div>
@@ -449,6 +489,18 @@
   </footer>
 
   <script>
+    // PAGE TRANSITIONS
+    document.body.classList.add('loaded');
+    document.querySelectorAll('a[href]').forEach(a => {
+      a.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href.startsWith('#') || href.startsWith('tel:') || href.startsWith('mailto:') || this.target === '_blank') return;
+        e.preventDefault();
+        document.body.classList.remove('loaded');
+        setTimeout(() => { window.location.href = href; }, 300);
+      });
+    });
+
     /* Finance Calculator */
     function calcTesla() {
       var price = 38700;
@@ -467,8 +519,12 @@
     function toggleMenu() {
       document.querySelector('.hamburger').classList.toggle('active');
       document.getElementById('mobileMenu').classList.toggle('open');
+      document.getElementById('mobileOverlay').classList.toggle('open');
       document.body.style.overflow = document.getElementById('mobileMenu').classList.contains('open') ? 'hidden' : '';
     }
+    document.getElementById('mobileOverlay').addEventListener('click', function() {
+      if (this.classList.contains('open')) toggleMenu();
+    });
 
     /* Vehicle Customizer */
     const colorImages = { original: 'images/tesla-model-3.jpg', black: 'images/black-tesla-model-3.jpg' };

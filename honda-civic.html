@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="2021 Honda Civic Sport at AutoPrime — 34,800 miles, certified pre-owned with transparent pricing and bespoke financing options.">
   <title>2021 Honda Civic Sport — AutoPrime</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +23,8 @@
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); }
+    body { font-family: 'Inter', sans-serif; color: var(--text); background: var(--bg); opacity: 0; transition: opacity 0.4s ease; }
+    body.loaded { opacity: 1; }
     h1, h2, h3 { font-family: 'Playfair Display', serif; }
 
     /* Nav — Glassmorphism */
@@ -549,6 +551,18 @@
   </footer>
 
   <script>
+    // PAGE TRANSITIONS
+    document.body.classList.add('loaded');
+    document.querySelectorAll('a[href]').forEach(a => {
+      a.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href.startsWith('#') || href.startsWith('tel:') || href.startsWith('mailto:') || this.target === '_blank') return;
+        e.preventDefault();
+        document.body.classList.remove('loaded');
+        setTimeout(() => { window.location.href = href; }, 300);
+      });
+    });
+
     /* Finance calculator */
     function calcCivic() {
       const price = 22400;

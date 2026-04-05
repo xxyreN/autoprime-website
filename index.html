@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="AutoPrime — Luxury pre-owned vehicles with transparent pricing, bespoke financing, and a concierge experience. Browse our curated collection of certified cars.">
   <title>AutoPrime — Luxury Pre-Owned Vehicles</title>
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -35,7 +36,10 @@
       color: var(--text);
       background: var(--bg);
       overflow-x: hidden;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
+    body.loaded { opacity: 1; }
 
     /* ANIMATIONS */
     .reveal {
@@ -1168,6 +1172,7 @@
       .section-header h2 { font-size: 2rem; }
 
       .cars-grid { grid-template-columns: 1fr; }
+      .car-btn { padding: 16px; font-size: 0.9rem; }
       .features-grid { grid-template-columns: 1fr; }
       .testimonials-grid { grid-template-columns: 1fr; }
 
@@ -1370,6 +1375,9 @@
       </div>
 
     </div>
+    <div style="text-align:center;margin-top:48px" class="reveal">
+      <a href="inventory.html" class="btn-ghost">View All Inventory</a>
+    </div>
   </section>
 
   <!-- COMPARE VEHICLES -->
@@ -1477,21 +1485,22 @@
       <div class="section-tag">Begin Your Journey</div>
       <h2>Get in Touch</h2>
       <p>Fill out the form below and our concierge team will reach out within 24 hours.</p>
-      <form class="contact-form" onsubmit="event.preventDefault(); this.innerHTML='<p style=\'grid-column:1/-1;text-align:center;color:var(--gold);font-family:var(--font-display);font-size:1.3rem;padding:40px 0\'>Thank you! We\'ll be in touch shortly.</p>'; return false;">
+      <form class="contact-form" name="contact" method="POST" data-netlify="true" onsubmit="event.preventDefault(); fetch('/', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body: new URLSearchParams(new FormData(this)).toString()}).then(() => {this.innerHTML='<p style=\'grid-column:1/-1;text-align:center;color:var(--gold);font-family:var(--font-display);font-size:1.3rem;padding:40px 0\'>Thank you! We\'ll be in touch shortly.</p>'}).catch(() => {this.innerHTML='<p style=\'grid-column:1/-1;text-align:center;color:var(--gold);font-family:var(--font-display);font-size:1.3rem;padding:40px 0\'>Thank you! We\'ll be in touch shortly.</p>'});">
+        <input type="hidden" name="form-name" value="contact">
         <div class="form-field">
-          <input type="text" placeholder="First Name" required>
+          <input type="text" name="first-name" placeholder="First Name" required>
         </div>
         <div class="form-field">
-          <input type="text" placeholder="Last Name" required>
+          <input type="text" name="last-name" placeholder="Last Name" required>
         </div>
         <div class="form-field">
-          <input type="email" placeholder="Email Address" required>
+          <input type="email" name="email" placeholder="Email Address" required>
         </div>
         <div class="form-field">
-          <input type="tel" placeholder="Phone Number">
+          <input type="tel" name="phone" placeholder="Phone Number">
         </div>
         <div class="form-field full-width">
-          <select>
+          <select name="interest">
             <option value="" disabled selected>I'm interested in...</option>
             <option>Scheduling a Test Drive</option>
             <option>Financing Options</option>
@@ -1500,7 +1509,7 @@
           </select>
         </div>
         <div class="form-field full-width">
-          <textarea placeholder="Tell us more about what you're looking for..." rows="4"></textarea>
+          <textarea name="message" placeholder="Tell us more about what you're looking for..." rows="4"></textarea>
         </div>
         <button type="submit" class="form-submit">Send Message</button>
       </form>
@@ -1521,21 +1530,32 @@
   <div class="cookie-banner" id="cookieBanner">
     <p>We use cookies to enhance your browsing experience and analyze site traffic. By continuing, you agree to our <a href="#">Privacy Policy</a>.</p>
     <div class="cookie-buttons">
-      <button class="cookie-accept" onclick="document.getElementById('cookieBanner').classList.remove('visible')">Accept All</button>
-      <button class="cookie-decline" onclick="document.getElementById('cookieBanner').classList.remove('visible')">Decline</button>
+      <button class="cookie-accept" onclick="localStorage.setItem('cookieConsent','accepted');document.getElementById('cookieBanner').classList.remove('visible')">Accept All</button>
+      <button class="cookie-decline" onclick="localStorage.setItem('cookieConsent','declined');document.getElementById('cookieBanner').classList.remove('visible')">Decline</button>
     </div>
   </div>
 
   <script>
-    // PAGE LOADER
+    // PAGE TRANSITIONS + LOADER
+    document.body.classList.add('loaded');
     window.addEventListener('load', () => {
       setTimeout(() => {
         document.getElementById('pageLoader').classList.add('hidden');
       }, 600);
-      // Show cookie banner after a short delay
-      setTimeout(() => {
-        document.getElementById('cookieBanner').classList.add('visible');
-      }, 2000);
+      if (!localStorage.getItem('cookieConsent')) {
+        setTimeout(() => {
+          document.getElementById('cookieBanner').classList.add('visible');
+        }, 2000);
+      }
+    });
+    document.querySelectorAll('a[href]').forEach(a => {
+      a.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href.startsWith('#') || href.startsWith('tel:') || href.startsWith('mailto:') || this.target === '_blank') return;
+        e.preventDefault();
+        document.body.classList.remove('loaded');
+        setTimeout(() => { window.location.href = href; }, 300);
+      });
     });
 
     // SCROLL REVEAL

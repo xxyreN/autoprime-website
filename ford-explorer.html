@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="2024 Ford Explorer XLT at AutoPrime — 5,200 miles, certified pre-owned with transparent pricing and bespoke financing options.">
   <title>2024 Ford Explorer XLT — AutoPrime</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -33,7 +34,10 @@
       background: var(--bg);
       line-height: 1.6;
       -webkit-font-smoothing: antialiased;
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
+    body.loaded { opacity: 1; }
     h1, h2, h3, h4 { font-family: 'Playfair Display', serif; font-weight: 700; }
     a { text-decoration: none; color: inherit; }
     img { display: block; max-width: 100%; }
@@ -852,6 +856,18 @@
 
   <!-- ═══ JAVASCRIPT ═══ -->
   <script>
+    // PAGE TRANSITIONS
+    document.body.classList.add('loaded');
+    document.querySelectorAll('a[href]').forEach(a => {
+      a.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href.startsWith('#') || href.startsWith('tel:') || href.startsWith('mailto:') || this.target === '_blank') return;
+        e.preventDefault();
+        document.body.classList.remove('loaded');
+        setTimeout(() => { window.location.href = href; }, 300);
+      });
+    });
+
     /* ── Hamburger & Mobile Menu ─────────────────────── */
     const hamburger = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobileMenu');
